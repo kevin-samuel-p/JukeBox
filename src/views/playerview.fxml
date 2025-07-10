@@ -7,20 +7,15 @@
 <VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PlayerController"> 
 
     <!-- Row 1: Track Info -->
-    <HBox alignment="CENTER_LEFT" spacing="10">
-        <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
-        </padding>
-        <Label fx:id="trackInfoLabel" text="Track Name - Artist" />
-    </HBox>
+    <Label fx:id="trackInfoLabel" text="Track Name - Artist" />
 
     <!-- Row 2: Volume Slider Right-Aligned -->
     <HBox spacing="10">
-        <Region HBox.hgrow="ALWAYS" />
-        <Slider fx:id="volumeSlider" maxWidth="80" value="70" />
         <padding>
-            <Insets bottom="5" right="10" />
+            <Insets bottom="5" right="10" top="5" left="10" />
         </padding>
+        <Region HBox.hgrow="ALWAYS" />
+        <Slider fx:id="volumeSlider" maxWidth="80" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
     </HBox>
 
     <!-- Row 3: Centered Controls -->
