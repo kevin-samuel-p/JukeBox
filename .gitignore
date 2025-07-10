@@ -1,0 +1,16 @@
+# Ignore JavaFX SDK
+/javafx-sdk-24.0.1/
+
+# Ignore compiled class files
+*.class
+
+# Ignore VS Code workspace settings
+.vscode/
+
+# Ignore IDE folders
+.idea/
+*.iml
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
