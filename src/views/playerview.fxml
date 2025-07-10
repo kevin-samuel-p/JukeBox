@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PlayerController"> 
+<VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PlayerController" stylesheets="@playerview.css"> 
 
     <!-- Row 1: Track Info -->
     <Label fx:id="trackInfoLabel" text="Track Name - Artist" />
@@ -15,7 +15,7 @@
             <Insets bottom="5" right="10" top="5" left="10" />
         </padding>
         <Region HBox.hgrow="ALWAYS" />
-        <Slider fx:id="volumeSlider" maxWidth="80" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
+        <Slider fx:id="volumeSlider" minWidth="130" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
     </HBox>
 
     <!-- Row 3: Centered Controls -->

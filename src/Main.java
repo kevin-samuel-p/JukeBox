@@ -11,6 +11,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Create root layout
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: black;");
 
         // Load player view from FXML
         MenuBar menuBar = FXMLLoader.load(getClass().getResource("/views/topmenu.fxml"));
@@ -25,7 +26,7 @@ public class Main extends Application {
         // Show the scene
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("GrooveFX");
+        primaryStage.setTitle("JukeBox");
         primaryStage.show();
     }
 
