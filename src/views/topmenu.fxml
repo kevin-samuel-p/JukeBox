@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<MenuBar xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MenuController">
+    <menus>
+        <Menu text="Settings">
+            <items>
+                <MenuItem fx:id="themeMenuItem" text="Theme" onAction="#handleTheme" />
+                <MenuItem fx:id="equalizerMenuItem" text="Equalizer" onAction="#handleEqualizer" />
+                <MenuItem fx:id="loudnessMenuItem" text="Loudness Equalizer" onAction="#handleLoudness" />
+            </items>
+        </Menu>
+
+        <Menu text="Help">
+            <items>
+                <MenuItem fx:id="aboutMenu" text="About" onAction="#handleAbout" />
+            </items>
+        </Menu>
+    </menus>
+</MenuBar>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PlayerController"> 
+
+    <!-- Row 1: Track Info -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10" />
+        </padding>
+        <Label fx:id="trackInfoLabel" text="Track Name - Artist" />
+    </HBox>
+
+    <!-- Row 2: Volume Slider Right-Aligned -->
+    <HBox spacing="10">
+        <Region HBox.hgrow="ALWAYS" />
+        <Slider fx:id="volumeSlider" maxWidth="80" value="70" />
+        <padding>
+            <Insets bottom="5" right="10" />
+        </padding>
+    </HBox>
+
+    <!-- Row 3: Centered Controls -->
+    <HBox alignment="CENTER" spacing="15">
+        <padding>
+            <Insets top="10" right="10" bottom="5" left="10" />
+        </padding>
+        <ToggleButton fx:id="loopButton" text="🔁" />
+        <Button fx:id="previousButton" text="⏮" />
+        <Button fx:id="playPauseButton" text="▶" style="-fx-font-size: 24px; -fx-pref-width: 50px; -fx-pref-height: 50px;" />
+        <Button fx:id="nextButton" text="⏭" />
+        <ToggleButton fx:id="shuffleButton" text="🔀" />
+    </HBox>
+
+    <!-- Track Slider Centered -->
+    <Slider fx:id="trackSlider" maxWidth="300" prefWidth="300" />
+    <Label text="00:00" fx:id="timestampLabel" />
+</VBox>
