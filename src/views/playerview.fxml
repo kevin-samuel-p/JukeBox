@@ -14,7 +14,7 @@
         <padding>
             <Insets bottom="5" right="10" top="5" left="10" />
         </padding>
-        <Region HBox.hgrow="ALWAYS" />
+        <Region HBox.hgrow="SOMETIMES" />
         <Label fx:id="volumeIcon" text="🔊" style="-fx-font-size: 24px; -fx-cursor: hand; -fx-translate-y: 12;" />
         <Slider fx:id="volumeSlider" minWidth="130" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
     </HBox>
@@ -36,7 +36,16 @@
 
     <!-- Timestamp Row in HBox -->
     <HBox spacing="270" alignment="CENTER">
-        <Label fx:id="currentTimeLabel" text="00:00" />
-        <Label fx:id="totalTimeLabel" text="00:00" />
+        <Label fx:id="currentTimeLabel" text="00:00">
+            <padding>
+                <Insets top="5" left="5" right="5" bottom="10" />
+            </padding>
+        </Label>
+
+        <Label fx:id="totalTimeLabel" text="00:00">
+            <padding>
+                <Insets top="5" left="5" right="5" bottom="10" />
+            </padding>
+        </Label>
     </HBox>
 </VBox>

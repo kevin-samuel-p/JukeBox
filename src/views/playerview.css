@@ -17,6 +17,12 @@
     -fx-font-weight: bold;
 }
 
+#currentTimeLabel, #totalTimeLabel {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: lighter;
+}
+
 /* Buttons & Toggle Buttons */
 .button, .toggle-button {
     -fx-background-radius: 50%;
