@@ -17,7 +17,7 @@ public class PlayerController {
     @FXML private Button previousButton, playPauseButton, nextButton;
     @FXML private ToggleButton loopButton, shuffleButton;
     @FXML private Slider trackSlider, volumeSlider;
-    @FXML private Label timestampLabel, volumeIcon;
+    @FXML private Label currentTimeLabel, totalTimeLabel, volumeIcon;
 
     private Media media;
     private MediaPlayer mediaPlayer;
@@ -50,12 +50,14 @@ public class PlayerController {
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             if (!isManuallySeeking) {
                 trackSlider.setValue(newTime.toSeconds());
-                updateTimestampLabel(newTime);
+                currentTimeLabel.setText(formatTime(newTime));
             }
         });
 
         mediaPlayer.setOnReady(() -> {
-            trackSlider.setMax(media.getDuration().toSeconds());
+            Duration total = media.getDuration();
+            trackSlider.setMax(total.toSeconds());
+            totalTimeLabel.setText(formatTime(total));
         });
 
         trackSlider.setOnMousePressed(e -> isManuallySeeking = true);
@@ -69,10 +71,10 @@ public class PlayerController {
 
         // Volume slider color update
         Platform.runLater(() -> {
-            updateSliderColor(volumeSlider.getValue());
+            updateVolumeSliderColor(volumeSlider.getValue());
 
             volumeSlider.valueProperty().addListener((_obs, _oldVal, newVal) -> {
-                updateSliderColor(newVal.doubleValue());
+                updateVolumeSliderColor(newVal.doubleValue());
             });
         });
 
@@ -144,7 +146,13 @@ public class PlayerController {
         isPlaying = !isPlaying;
     }
 
-    private void updateSliderColor(double value) {
+    private String formatTime(Duration time) {
+        int minutes = (int) time.toMinutes();
+        int seconds = (int) time.toSeconds() % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void updateVolumeSliderColor(double value) {
         double percent = value / volumeSlider.getMax() * 100;
 
         Node track = volumeSlider.lookup(".track");
@@ -200,11 +208,5 @@ public class PlayerController {
         } else {
             volumeIcon.setText("🔊");
         }
-    }
-
-    private void updateTimestampLabel(Duration time) {
-        int minutes = (int) time.toMinutes();
-        int seconds = (int) time.toSeconds() % 60;
-        timestampLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 }
