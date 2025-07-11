@@ -23,7 +23,7 @@ public class PlayerController {
         Platform.runLater(() -> {
             updateSliderColor(volumeSlider.getValue());
 
-            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            volumeSlider.valueProperty().addListener((_obs, _oldVal, newVal) -> {
                 updateSliderColor(newVal.doubleValue());
             });
         });

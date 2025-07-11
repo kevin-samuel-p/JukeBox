@@ -1,12 +1,13 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Create root layout
@@ -21,7 +22,7 @@ public class Main extends Application {
         root.setBottom(playerView);
 
         // (Optional) Add central content or top menu
-        root.setCenter(new javafx.scene.control.Label("Main Content Area"));
+        root.setCenter(new Label("Main Content Area"));
 
         // Show the scene
         Scene scene = new Scene(root, 800, 600);

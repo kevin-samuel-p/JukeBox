@@ -1,8 +1,9 @@
-# Ignore JavaFX SDK
-/javafx-sdk-24.0.1/
+# Ignore SDKs
+lib/
 
 # Ignore compiled class files
 *.class
+out/
 
 # Ignore VS Code workspace settings
 .vscode/

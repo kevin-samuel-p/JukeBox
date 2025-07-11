@@ -24,7 +24,7 @@ public class MenuController {
 
     @FXML
     private void handleAbout(ActionEvent event) {
-        showInfo("About", "GrooveFX\nVersion 1.0\nDeveloped by Sadge");
+        showInfo("About", "JukeBox\nVersion 1.0\nDeveloped by Sadge");
     }
 
     private void showInfo(String title, String content) {
