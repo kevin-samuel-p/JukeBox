@@ -33,5 +33,10 @@
 
     <!-- Track Slider Centered -->
     <Slider fx:id="trackSlider" maxWidth="300" prefWidth="300" />
-    <Label text="00:00" fx:id="timestampLabel" />
+
+    <!-- Timestamp Row in HBox -->
+    <HBox spacing="270" alignment="CENTER">
+        <Label fx:id="currentTimeLabel" text="00:00" />
+        <Label fx:id="totalTimeLabel" text="00:00" />
+    </HBox>
 </VBox>
