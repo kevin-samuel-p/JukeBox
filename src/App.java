@@ -29,7 +29,7 @@ public class App extends Application {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
 
-        Image icon = new Image("icon.png");
+        Image icon = new Image("/assets/icon.png");
         primaryStage.getIcons().add(icon);
         
         primaryStage.setTitle("JukeBox");

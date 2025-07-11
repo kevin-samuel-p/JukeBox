@@ -3,7 +3,13 @@ package controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.Node;
+import javafx.util.Duration;
+
+import java.io.File;
+
 
 public class PlayerController {
 
@@ -13,9 +19,13 @@ public class PlayerController {
     @FXML private Slider trackSlider, volumeSlider;
     @FXML private Label timestampLabel, volumeIcon;
 
-    private enum LoopMode {
-        OFF, ALL, ONE
-    }
+    private Media media;
+    private MediaPlayer mediaPlayer;
+
+    private boolean isPlaying = false;
+    private boolean isManuallySeeking = false;
+
+    private enum LoopMode { OFF, ALL, ONE }
     private LoopMode 
         currentLoopMode = LoopMode.OFF, 
         currentShuffleMode = LoopMode.OFF;
@@ -23,8 +33,37 @@ public class PlayerController {
     private boolean userManuallyMuted = false;
     private double lastVolume = 70; // default volume on start-up
 
+    @SuppressWarnings("unused")
     @FXML
     private void initialize() {
+
+        // Load a track for now (sample track for testing and debugging)
+        String path = "src/assets/sample.mp3";
+        media = new Media(new File(path).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setVolume(volumeSlider.getValue() / 100.0);
+        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            mediaPlayer.setVolume(newVal.doubleValue() / 100.0);
+        });
+
+        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+            if (!isManuallySeeking) {
+                trackSlider.setValue(newTime.toSeconds());
+                updateTimestampLabel(newTime);
+            }
+        });
+
+        mediaPlayer.setOnReady(() -> {
+            trackSlider.setMax(media.getDuration().toSeconds());
+        });
+
+        trackSlider.setOnMousePressed(e -> isManuallySeeking = true);
+        trackSlider.setOnMouseReleased(e -> {
+            isManuallySeeking = false;
+            mediaPlayer.seek(Duration.seconds(trackSlider.getValue()));
+        });
+
         // Set track info label
         trackInfoLabel.setText("No track playing");
 
@@ -90,13 +129,19 @@ public class PlayerController {
     }
 
     private void togglePlayback() {
-        if (playPauseButton.getText().equals("▶")) {
-            playPauseButton.setText("II");
-            trackInfoLabel.setText("Playing: Chill Beats - Lofi Girl");
-        } else {
+        if (mediaPlayer == null) return;
+
+        if (isPlaying) {
+            mediaPlayer.pause();
             playPauseButton.setText("▶");
-            trackInfoLabel.setText("Paused: Chill Beats - Lofi Girl");
+            trackInfoLabel.setText("Paused: Love the Lord - Lincoln Brewster");
+        } else {
+            mediaPlayer.play();
+            playPauseButton.setText("II");
+            trackInfoLabel.setText("Playing: Love the Lord - Lincoln Brewster");
         }
+
+        isPlaying = !isPlaying;
     }
 
     private void updateSliderColor(double value) {
@@ -115,12 +160,21 @@ public class PlayerController {
             case OFF -> {
                 loopButton.setText("🔁");
                 loopButton.setStyle("-fx-opacity: 0.3;");
+                mediaPlayer.setCycleCount(1);
+                mediaPlayer.setOnEndOfMedia(null);
             }
             case ALL -> {
                 loopButton.setStyle("-fx-opacity: 1;");
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                mediaPlayer.setOnEndOfMedia(null);
             }
             case ONE -> {
                 loopButton.setText("🔂");
+                mediaPlayer.setCycleCount(1);
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                });
             }
         }
     }
@@ -146,5 +200,11 @@ public class PlayerController {
         } else {
             volumeIcon.setText("🔊");
         }
+    }
+
+    private void updateTimestampLabel(Duration time) {
+        int minutes = (int) time.toMinutes();
+        int seconds = (int) time.toSeconds() % 60;
+        timestampLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 }
