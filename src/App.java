@@ -3,6 +3,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,6 +28,10 @@ public class App extends Application {
         // Show the scene
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
+
+        Image icon = new Image("icon.png");
+        primaryStage.getIcons().add(icon);
+        
         primaryStage.setTitle("JukeBox");
         primaryStage.show();
     }
