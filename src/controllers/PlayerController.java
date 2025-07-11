@@ -11,7 +11,7 @@ public class PlayerController {
     @FXML private Button previousButton, playPauseButton, nextButton;
     @FXML private ToggleButton loopButton, shuffleButton;
     @FXML private Slider trackSlider, volumeSlider;
-    @FXML private Label timestampLabel;
+    @FXML private Label timestampLabel, volumeIcon;
 
     private enum LoopMode {
         OFF, ALL, ONE
@@ -19,6 +19,9 @@ public class PlayerController {
     private LoopMode 
         currentLoopMode = LoopMode.OFF, 
         currentShuffleMode = LoopMode.OFF;
+
+    private boolean userManuallyMuted = false;
+    private double lastVolume = 70; // default volume on start-up
 
     @FXML
     private void initialize() {
@@ -32,6 +35,33 @@ public class PlayerController {
             volumeSlider.valueProperty().addListener((_obs, _oldVal, newVal) -> {
                 updateSliderColor(newVal.doubleValue());
             });
+        });
+
+        // Volume icon update
+        updateVolumeIcon(volumeSlider.getValue());
+        volumeSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                if (volumeSlider.getValue() == 0) {
+                    userManuallyMuted = true;
+                } else {
+                    userManuallyMuted = false;
+                    lastVolume = volumeSlider.getValue();
+                }
+            }
+        });
+
+        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            updateVolumeIcon(newValue.doubleValue());
+        });
+
+        volumeIcon.setOnMouseClicked(event -> {
+            if (volumeSlider.getValue() == 0 && !userManuallyMuted) {
+                volumeSlider.setValue(lastVolume > 0 ? lastVolume : 70);
+            } else {
+                userManuallyMuted = false;
+                lastVolume = volumeSlider.getValue();
+                volumeSlider.setValue(0);
+            }
         });
 
         // Action on play/pause button
@@ -103,6 +133,18 @@ public class PlayerController {
             default -> {
                 shuffleButton.setStyle("-fx-opacity: 1;");
             }
+        }
+    }
+
+    private void updateVolumeIcon(double volume) {
+        if (volume == 0) {
+            volumeIcon.setText("🔇");
+        } else if (volume <= 30) {
+            volumeIcon.setText("🔈");
+        } else if (volume <= 70) {
+            volumeIcon.setText("🔉");
+        } else {
+            volumeIcon.setText("🔊");
         }
     }
 }

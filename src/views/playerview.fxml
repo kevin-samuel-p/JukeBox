@@ -15,6 +15,7 @@
             <Insets bottom="5" right="10" top="5" left="10" />
         </padding>
         <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="volumeIcon" text="🔊" style="-fx-font-size: 24px; -fx-cursor: hand; -fx-translate-y: 12;" />
         <Slider fx:id="volumeSlider" minWidth="130" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
     </HBox>
 
