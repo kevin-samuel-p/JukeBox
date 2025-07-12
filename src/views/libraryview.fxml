@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"??>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- This will be populated dynamically -->
+<VBox fx:id="trackListContainer"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.LibraryController"
+      spacing="10"
+      alignment="TOP_CENTER"
+      style="-fx-padding: 20;" />

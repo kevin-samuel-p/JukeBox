@@ -9,6 +9,10 @@ import javafx.scene.Node;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
+
+import services.TrackService;
 
 
 public class PlayerController {
@@ -21,6 +25,9 @@ public class PlayerController {
 
     private Media media;
     private MediaPlayer mediaPlayer;
+
+    private List<File> trackList = new ArrayList<>();
+    private int currentTrackIndex = 0;
 
     private boolean isPlaying = false;
     private boolean isManuallySeeking = false;
@@ -38,11 +45,15 @@ public class PlayerController {
     private void initialize() {
 
         // Load a track for now (sample track for testing and debugging)
-        String path = "src/assets/sample.mp3";
-        media = new Media(new File(path).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
+        // String path = "src/assets/sample.mp3";
+        // media = new Media(new File(path).toURI().toString());
+        // mediaPlayer = new MediaPlayer(media);
+
+        String musicFolderPath = System.getProperty("user.home") + File.separator + "Music";
+        loadTracksFromFolder(musicFolderPath);
 
         mediaPlayer.setVolume(volumeSlider.getValue() / 100.0);
+
         volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             mediaPlayer.setVolume(newVal.doubleValue() / 100.0);
         });
@@ -108,6 +119,21 @@ public class PlayerController {
         // Action on play/pause button
         playPauseButton.setOnAction(e -> togglePlayback());
 
+        // Action on next/previous buttons
+        previousButton.setOnAction(e -> {
+            if (currentTrackIndex > 0) {
+                loadTrack(--currentTrackIndex);
+                mediaPlayer.play();
+            }
+        });
+
+        nextButton.setOnAction(e -> {
+            if (currentTrackIndex < trackList.size()) {
+                loadTrack(++currentTrackIndex);
+                mediaPlayer.play();
+            }
+        });
+
         // Loop button actions
         updateLoopButton();
         loopButton.setOnAction(e -> {
@@ -128,6 +154,16 @@ public class PlayerController {
             }
             updateShuffleButton();
         });
+
+        // Listen for track selection
+        TrackService.getInstance().selectedTrackProperty().addListener((obs, oldTrack, newTrack) -> {
+            if (newTrack != null) {
+                loadAndPlayTrack(newTrack);
+            }
+        });
+
+        // Disable buttons until a track is selected
+        setPlaybackControlsEnabled(false);
     }
 
     private void togglePlayback() {
@@ -208,5 +244,62 @@ public class PlayerController {
         } else {
             volumeIcon.setText("🔊");
         }
+    }
+
+
+    private void loadTracksFromFolder(String folderPath) {
+        File folder = new File(folderPath);
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp3"));
+            if (files != null) {
+                trackList.addAll(List.of(files));
+            }
+        }
+
+        if (!trackList.isEmpty()) {
+            loadTrack(currentTrackIndex);
+        } else {
+            trackInfoLabel.setText("No MP3 files found.");
+        }
+    }
+
+    private void loadTrack(int index) {
+        if (index < 0 || index >= trackList.size()) return;
+
+        File file = trackList.get(index);
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+
+        media = new Media(file.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        trackInfoLabel.setText("Playing: " + file.getName());
+    }
+
+    private void loadAndPlayTrack(File file) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+
+        media = new Media(file.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        trackInfoLabel.setText("Playing: " + file.getName());
+
+        mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+        mediaPlayer.play();
+        isPlaying = true;
+        playPauseButton.setText("II");
+
+        setPlaybackControlsEnabled(true);
+    }
+
+    private void setPlaybackControlsEnabled(boolean enabled) {
+        playPauseButton.setDisable(!enabled);
+        previousButton.setDisable(!enabled);
+        nextButton.setDisable(!enabled);
+        loopButton.setDisable(!enabled);
+        shuffleButton.setDisable(!enabled);
+        trackSlider.setDisable(!enabled);
     }
 }

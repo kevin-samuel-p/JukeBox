@@ -18,8 +18,10 @@ public class App extends Application {
         // Load player view from FXML
         MenuBar menuBar = FXMLLoader.load(getClass().getResource("/views/topmenu.fxml"));
         VBox playerView = FXMLLoader.load(getClass().getResource("/views/playerview.fxml"));
+        VBox libraryView = FXMLLoader.load(getClass().getResource("/views/libraryview.fxml"));
 
         root.setTop(menuBar);
+        root.setCenter(libraryView);
         root.setBottom(playerView);
 
         // (Optional) Add central content or top menu
