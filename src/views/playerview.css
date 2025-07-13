@@ -79,3 +79,8 @@
     /* Match button color */
     -fx-background-insets: 0;
 }
+
+#loopButton, #shuffleButton {
+    -fx-opacity: 0.3;
+    /* Originally deactivated */
+}

@@ -24,9 +24,6 @@ public class App extends Application {
         root.setCenter(libraryView);
         root.setBottom(playerView);
 
-        // (Optional) Add central content or top menu
-        root.setCenter(new Label("Main Content Area"));
-
         // Show the scene
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
