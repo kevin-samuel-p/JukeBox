@@ -54,8 +54,13 @@ public class PlayerController {
         // Set track info label
         trackInfoLabel.setText("No track playing");
 
-        // Volume icon update
-        updateVolumeIcon(volumeSlider.getValue());
+        // Update volume slider gradient and icon
+        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            updateVolumeSliderColor(newVal.doubleValue());
+            updateVolumeIcon(newVal.doubleValue());
+        });
+
+        // Get lastVolume value for mute button
         volumeSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging && volumeSlider.getValue() != 0) {
                 lastVolume = volumeSlider.getValue();
@@ -138,8 +143,6 @@ public class PlayerController {
         // Update mediaPlayer volume with volumeSlider
         volumeListener = (obs, oldVal, newVal) -> {
             mediaPlayer.setVolume(newVal.doubleValue() / 100.0);
-            updateVolumeSliderColor(newVal.doubleValue());
-            updateVolumeIcon(newVal.doubleValue());
         };
 
         // Update trackSlider while media is playing

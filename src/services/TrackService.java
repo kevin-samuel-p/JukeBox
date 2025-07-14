@@ -36,7 +36,7 @@ public class TrackService {
     public void loadTracksFromFolder(Path folderPath) {
         File folder = folderPath.toFile();
         if (folder.exists() && folder.isDirectory()) {
-            File[] mp3Files = folderPath.toFile().listFiles(
+            File[] mp3Files = folder.listFiles(
                 (dir, name) -> name.toLowerCase().endsWith(".mp3"));
             if (mp3Files != null) {
                 trackList.addAll(List.of(mp3Files));
