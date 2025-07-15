@@ -64,6 +64,7 @@ public class PlayerController {
         volumeSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging && volumeSlider.getValue() != 0) {
                 lastVolume = volumeSlider.getValue();
+                System.out.println("Last volume was " + volumeSlider.getValue());
             }
         });
 
@@ -71,8 +72,10 @@ public class PlayerController {
         volumeIcon.setOnMouseClicked(e -> {
             if (volumeSlider.getValue() == 0) {
                 volumeSlider.setValue(lastVolume);
+                System.out.println("Unumted");
             } else {
                 volumeSlider.setValue(0);
+                System.out.println("Muted");
             }
         });
 
@@ -85,25 +88,44 @@ public class PlayerController {
                     mediaPlayer.pause();
                     playPauseButton.setText("▶");
                     trackInfoLabel.setText("Paused: " + trackName);
+                    System.out.println("Paused track: " + trackName);
                 }
                 case MediaPlayer.Status.PAUSED -> {
                     mediaPlayer.play();
                     playPauseButton.setText("II");
                     trackInfoLabel.setText("Playing: " + trackName);
+                    System.out.println("Playing track: " + trackName);
                 }
             }
         });
 
         // Action on previous button: disable if previous track not found
         previousButton.setOnAction(e -> {
-            previousButton.setDisable(
-                !TrackService.getInstance().previousTrack());
+            // previousButton.setDisable(
+            //     !TrackService.getInstance().previousTrack());
+            // System.out.println("Previous button was clicked");
+
+            if (!TrackService.getInstance().previousTrack()) {
+                previousButton.setDisable(true);
+                System.out.println("Previous button was disabled here");
+            } else {
+                previousButton.setDisable(true);
+                System.out.println("Previous button was enabled here");
+            }
         });
 
         // Action on next button: disable if next track not found
         nextButton.setOnAction(e -> {
-            nextButton.setDisable(
-                !TrackService.getInstance().previousTrack());
+            // nextButton.setDisable(
+            //     !TrackService.getInstance().previousTrack());
+
+            if (!TrackService.getInstance().previousTrack()) {
+                nextButton.setDisable(true);
+                System.out.println("Next button was disabled here");
+            } else {
+                nextButton.setDisable(false);
+                System.out.println("Next button was enabled here");
+            }
         });
 
         // Disable buttons until a track is selected
@@ -178,11 +200,17 @@ public class PlayerController {
         shuffleButton.setOnAction(e -> {
             switch(currentShuffleMode) {
                 case OFF -> {
+                    // Enable it
                     currentShuffleMode = ShuffleMode.ON;
+                    System.out.println("Shuffle button was supposedly enabled");
+                    TrackService.getInstance().enableShuffle();
                     shuffleButton.setStyle("-fx-opacity: 1;");
                 }
                 case ON -> {
+                    // Turn it off
                     currentShuffleMode = ShuffleMode.OFF;
+                    System.out.println("Shuffle button was supposedly disabled");
+                    TrackService.getInstance().disableShuffle();
                     shuffleButton.setStyle("-fx-opacity: 0.3;");
                 }
             }
@@ -214,7 +242,7 @@ public class PlayerController {
                 loopButton.setText("🔁");
                 loopButton.setStyle("-fx-opacity: 0.3;");
                 mediaPlayer.setCycleCount(1);
-                mediaPlayer.setOnEndOfMedia(null);
+                mediaPlayer.setOnEndOfMedia(() -> TrackService.getInstance().nextTrack());
             }
             case ALL -> {
                 loopButton.setStyle("-fx-opacity: 1;");
@@ -246,8 +274,6 @@ public class PlayerController {
             volumeIcon.setText("🔊");
         }
     }
-
-    
 
     private void setPlaybackControlsEnabled(boolean enabled) {
         playPauseButton.setDisable(!enabled);
