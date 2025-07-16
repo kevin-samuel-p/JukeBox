@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import services.TrackService;
 
@@ -101,31 +103,32 @@ public class PlayerController {
 
         // Action on previous button: disable if previous track not found
         previousButton.setOnAction(e -> {
-            // previousButton.setDisable(
-            //     !TrackService.getInstance().previousTrack());
-            // System.out.println("Previous button was clicked");
-
-            if (!TrackService.getInstance().previousTrack()) {
-                previousButton.setDisable(true);
-                System.out.println("Previous button was disabled here");
+            if (mediaPlayer.getCurrentTime().toSeconds() > 1) {
+                mediaPlayer.seek(Duration.ZERO);
+                if (TrackService.getInstance().getCurrentTrackIndex() == 0) {
+                    delayButtonEnable(previousButton);
+                }
             } else {
-                previousButton.setDisable(true);
-                System.out.println("Previous button was enabled here");
+                if (!TrackService.getInstance().previousTrack()) { 
+                    delayButtonEnable(previousButton);
+                } else {
+                    previousButton.setDisable(false);
+                }
             }
         });
 
         // Action on next button: disable if next track not found
         nextButton.setOnAction(e -> {
-            // nextButton.setDisable(
-            //     !TrackService.getInstance().previousTrack());
+            nextButton.setDisable(!
+                TrackService.getInstance().nextTrack());
 
-            if (!TrackService.getInstance().previousTrack()) {
-                nextButton.setDisable(true);
-                System.out.println("Next button was disabled here");
-            } else {
-                nextButton.setDisable(false);
-                System.out.println("Next button was enabled here");
-            }
+            // if (!TrackService.getInstance().nextTrack()) {
+            //     nextButton.setDisable(true);
+            //     System.out.println("Next button was disabled here");
+            // } else {
+            //     nextButton.setDisable(false);
+            //     System.out.println("Next button was enabled here");
+            // }
         });
 
         // Disable buttons until a track is selected
@@ -160,6 +163,23 @@ public class PlayerController {
             Duration total = media.getDuration();
             trackSlider.setMax(total.toSeconds());
             totalTimeLabel.setText(formatTime(total));
+
+            // FIXME: Trial
+            // Optional disables 
+            if (currentShuffleMode == ShuffleMode.OFF) {
+                int currIndex = TrackService.getInstance().getCurrentTrackIndex();
+                if (currIndex == 0) {
+                    delayButtonEnable(previousButton); 
+                } else if (currIndex == TrackService.getInstance().getTrackList().size() - 1) {
+                    nextButton.setDisable(true);
+                } else {
+                    previousButton.setDisable(false);
+                    nextButton.setDisable(false);
+                }
+            } else {
+                previousButton.setDisable(false);
+                nextButton.setDisable(false);
+            }
         });
 
         // Update mediaPlayer volume with volumeSlider
@@ -273,6 +293,20 @@ public class PlayerController {
         } else {
             volumeIcon.setText("🔊");
         }
+    }
+
+    private void delayButtonEnable(Button button) {
+        button.setDisable(true);
+        // Delay enable by 1 second
+        // Clicking previous after that will replay track from start
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> button.setDisable(false));
+                timer.cancel();     // To stop timer after one execution
+            }
+        }, 1000); 
     }
 
     private void setPlaybackControlsEnabled(boolean enabled) {

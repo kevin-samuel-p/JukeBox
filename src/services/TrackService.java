@@ -27,11 +27,10 @@ public class TrackService {
     private boolean shuffleEnabled;
 
     private TrackService() throws InvalidPathException {
-        selectedTrack = new SimpleObjectProperty<>();
+        selectedTrack = new SimpleObjectProperty<>(null);
         trackList = new ArrayList<>();
         currentTrackIndex = 0;
 
-        shuffler = new Shuffler();
         shuffleEnabled = false;
 
         try {
@@ -91,6 +90,7 @@ public class TrackService {
 
     public void enableShuffle() {
         shuffleEnabled = true;
+        shuffler = new Shuffler();
         System.out.println("Shuffle button was truly enabled");
     }
 
@@ -111,17 +111,21 @@ public class TrackService {
     // --- Methods ---
 
     public boolean previousTrack() {    // FIXME: Dear John, this is not working.
-        if (shuffleEnabled && shuffler.previousTrack()) return true;
-
+        System.out.println("previousTrack() was called");
+        // if shuffler.previousTrack() returns false then rollback to original previousTrack() method
+        if (shuffleEnabled && shuffler.previousTrack()) return true;    
+        
         boolean success = false;
         if (currentTrackIndex > 0) {
-            setCurrentTrackIndex(--currentTrackIndex);;
+            setCurrentTrackIndex(--currentTrackIndex);
             success = true;
         }
+        System.out.println("previousTrack() returned " + success);
         return success;
     }
 
     public boolean nextTrack() {    // FIXME: Dear Jon, this is not working.
+        System.out.println("nextTrack() was called");
         if (shuffleEnabled) return shuffler.nextTrack();
 
         boolean success = false;
@@ -129,6 +133,7 @@ public class TrackService {
             setCurrentTrackIndex(++currentTrackIndex);
             success = true;
         }
+        System.out.println("nextTrack() returned " + success);
         return success;
     }
 
@@ -161,31 +166,54 @@ public class TrackService {
         private int selector = trackList.size() - 1;
 
         Shuffler() {
-            shuffleMap.put(currentTrackIndex, selector--);
-            playedTracks.push(currentTrackIndex);
+            System.out.println("getSelectedTrack() prints " + getSelectedTrack().getName());
+            if (getSelectedTrack() != null) {
+                shuffleMap.put(currentTrackIndex, selector--);
+                playedTracks.push(currentTrackIndex);
+            }
+            System.out.println("Selector at the time of initialization is " + selector);
+            System.out.println("shuffleMap at the time of initialization: " + shuffleMap.toString());
+            System.out.println("playedTracks at the time of initialization: " + playedTracks);
         }
 
         boolean previousTrack() {   // FIXME: Dear Jon, this is not working.
-            if (selector == trackList.size()) return false;
+                                    // On it!
+            System.out.println("Shuffler.previousTrack() was called");
+            if (selector == trackList.size() - 1) {
+                System.out.println("Shuffler.previousTrack() returned false");
+                return false;
+            }
 
             shuffleMap.remove(playedTracks.peek());
+            System.out.println("shuffleMap looks like this: " + shuffleMap.toString());
             setCurrentTrackIndex(playedTracks.pop());
+            System.out.println("playedTracks looks like this: " + playedTracks.toString());
             selector++;
+            System.out.println("Selector is now " + selector);
+            System.out.println("Shuffler.previousTrack() returned true");
             return true;
         }
 
         boolean nextTrack() {   // FIXME: Dear Jon, this is not working.
-            if (selector == 0) return false;
-
-            int index = indexGenerator.nextInt(selector);
+                                // On it!
+            System.out.println("Shuffler.nextTrack() was called");
+            if (selector == -1) {
+                System.out.println("Shuffler.nextTrack() returned false");
+                return false;
+            }
+            System.out.println("Argument passed to indexGenerator is " + selector);
+            int index = (selector != 0) ? indexGenerator.nextInt(selector) : 0;
             while (shuffleMap.containsKey(index)) {
                 index = shuffleMap.get(index);
             }
 
             shuffleMap.put(index, selector--);
+            System.out.println("shuffleMap looks like this: " + shuffleMap.toString());
             playedTracks.push(index);
+            System.out.println("playedTracks looks like this: " + playedTracks.toString());
             setCurrentTrackIndex(index);
-            return true;
+            System.out.println("Shuffler.nextTrack() returned true");
+            return (selector > -1);
         }
 
         void reset() {
