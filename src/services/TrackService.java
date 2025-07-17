@@ -110,7 +110,7 @@ public class TrackService {
 
     // --- Methods ---
 
-    public boolean previousTrack() {    // FIXME: Dear John, this is not working.
+    public boolean previousTrack() {
         System.out.println("previousTrack() was called");
         // if shuffler.previousTrack() returns false then rollback to original previousTrack() method
         if (shuffleEnabled && shuffler.previousTrack()) return true;    
@@ -124,7 +124,7 @@ public class TrackService {
         return success;
     }
 
-    public boolean nextTrack() {    // FIXME: Dear Jon, this is not working.
+    public boolean nextTrack() {
         System.out.println("nextTrack() was called");
         if (shuffleEnabled) return shuffler.nextTrack();
 
@@ -176,8 +176,7 @@ public class TrackService {
             System.out.println("playedTracks at the time of initialization: " + playedTracks);
         }
 
-        boolean previousTrack() {   // FIXME: Dear Jon, this is not working.
-                                    // On it!
+        boolean previousTrack() {
             System.out.println("Shuffler.previousTrack() was called");
             if (selector == trackList.size() - 1) {
                 System.out.println("Shuffler.previousTrack() returned false");
@@ -194,8 +193,7 @@ public class TrackService {
             return true;
         }
 
-        boolean nextTrack() {   // FIXME: Dear Jon, this is not working.
-                                // On it!
+        boolean nextTrack() {   
             System.out.println("Shuffler.nextTrack() was called");
             if (selector == -1) {
                 System.out.println("Shuffler.nextTrack() returned false");
@@ -211,7 +209,7 @@ public class TrackService {
             System.out.println("shuffleMap looks like this: " + shuffleMap.toString());
             playedTracks.push(index);
             System.out.println("playedTracks looks like this: " + playedTracks.toString());
-            setCurrentTrackIndex(index);
+            setCurrentTrackIndex(shuffleMap.get(index));
             System.out.println("Shuffler.nextTrack() returned true");
             return (selector > -1);
         }

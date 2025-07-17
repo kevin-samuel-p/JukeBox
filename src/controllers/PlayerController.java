@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Track;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -32,10 +33,10 @@ public class PlayerController {
 
     private boolean isManuallySeeking = false;
 
-    private enum LoopMode { OFF, ALL, ONE }
+    private enum LoopMode { OFF, ALL, ONE }     // TODO: Impose LoopMode overrides on previous and next buttons
     private LoopMode currentLoopMode = LoopMode.OFF;
 
-    private enum ShuffleMode { OFF, ON }
+    private enum ShuffleMode { OFF, ON }        // TODO: Customize previous and next controls for Shuffle mode
     private ShuffleMode currentShuffleMode = ShuffleMode.OFF;
 
     private double lastVolume = 70; // default volume on start-up
@@ -101,34 +102,53 @@ public class PlayerController {
             }
         });
 
-        // Action on previous button: disable if previous track not found
+        /*
+         *  ___Actions__on__Previous__Button___
+         *  -> Restarts track from beginning
+         *  -> When clicked against instantaneously, goes to previous track
+         *  -> Disables responsively for first 1 second if there is no previous track
+         *  -> When loop-all is enabled, it simply fetches the last index from trackList
+         *  -> No concerns for shuffle mode as Shuffler.previousTrack() rolls back to default 
+         *     previousTrack() when false
+         */
         previousButton.setOnAction(e -> {
             if (mediaPlayer.getCurrentTime().toSeconds() > 1) {
                 mediaPlayer.seek(Duration.ZERO);
-                if (TrackService.getInstance().getCurrentTrackIndex() == 0) {
+                if (currentLoopMode != LoopMode.ALL 
+                        && TrackService.getInstance().getCurrentTrackIndex() == 0) {
                     delayButtonEnable(previousButton);
-                }
-            } else {
-                if (!TrackService.getInstance().previousTrack()) { 
-                    delayButtonEnable(previousButton);
-                } else {
-                    previousButton.setDisable(false);
-                }
+                } 
+            } else if (!TrackService.getInstance().previousTrack() 
+                        && currentLoopMode == LoopMode.ALL) {
+                TrackService.getInstance()
+                            .setCurrentTrackIndex(
+                                TrackService.getInstance()
+                                            .getTrackList().size() - 1);
             }
         });
 
-        // Action on next button: disable if next track not found
+        /*
+         *  ___Actions__On__Next__Button___
+         *  -> Selects next index in trackList as currentTrackIndex
+         *  -> If reached end of trackList, button is disabled by default
+         *  -> Works for shuffle as well since Shuffler.nextTrack() is returned by default nextTrack()
+         *  -> When in loop-all mode, sets currentTrackIndex to zero if traversed entire track
+         *  -> If loop-all and shuffle mode are both enabled, then it simply turns shuffle mode off and on
+         *     when Shuffler.nextTrack() returns false at the end of shuffled playlist
+         */
         nextButton.setOnAction(e -> {
-            nextButton.setDisable(!
-                TrackService.getInstance().nextTrack());
-
-            // if (!TrackService.getInstance().nextTrack()) {
-            //     nextButton.setDisable(true);
-            //     System.out.println("Next button was disabled here");
-            // } else {
-            //     nextButton.setDisable(false);
-            //     System.out.println("Next button was enabled here");
-            // }
+            if (currentLoopMode == LoopMode.ALL) {
+                if (!TrackService.getInstance().nextTrack()) {
+                    if (currentShuffleMode == ShuffleMode.ON) {
+                        TrackService.getInstance().disableShuffle();
+                        TrackService.getInstance().enableShuffle();
+                    } else {
+                        TrackService.getInstance().setCurrentTrackIndex(0);
+                    }
+                }
+            } else {
+                nextButton.setDisable(!TrackService.getInstance().nextTrack());
+            }  
         });
 
         // Disable buttons until a track is selected
@@ -164,21 +184,28 @@ public class PlayerController {
             trackSlider.setMax(total.toSeconds());
             totalTimeLabel.setText(formatTime(total));
 
-            // FIXME: Trial
-            // Optional disables 
-            if (currentShuffleMode == ShuffleMode.OFF) {
-                int currIndex = TrackService.getInstance().getCurrentTrackIndex();
-                if (currIndex == 0) {
-                    delayButtonEnable(previousButton); 
-                } else if (currIndex == TrackService.getInstance().getTrackList().size() - 1) {
-                    nextButton.setDisable(true);
-                } else {
+            switch(currentLoopMode) {
+                case ALL -> {
                     previousButton.setDisable(false);
                     nextButton.setDisable(false);
                 }
-            } else {
-                previousButton.setDisable(false);
-                nextButton.setDisable(false);
+                default -> {
+                    if (currentShuffleMode == ShuffleMode.OFF) {
+                        int currIndex = TrackService.getInstance().getCurrentTrackIndex();
+                        if (currIndex == 0) {
+                            delayButtonEnable(previousButton); 
+                        } else if (currIndex == 
+                                    TrackService.getInstance().getTrackList().size() - 1) {
+                            nextButton.setDisable(true);
+                        } else {
+                            previousButton.setDisable(false);
+                            nextButton.setDisable(false);
+                        }
+                    } else {
+                        previousButton.setDisable(false);
+                        nextButton.setDisable(false);
+                    }
+                }
             }
         });
 
@@ -266,6 +293,7 @@ public class PlayerController {
             }
             case ALL -> {
                 loopButton.setStyle("-fx-opacity: 1;");
+                nextButton.setDisable(false);
                 mediaPlayer.setOnEndOfMedia(() -> {
                     if (!TrackService.getInstance().nextTrack()) {
                         TrackService.getInstance().setCurrentTrackIndex(0);
