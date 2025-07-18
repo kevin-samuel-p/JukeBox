@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.geometry.Insets?>
 
-<!-- This will be populated dynamically -->
-<VBox fx:id="trackListContainer"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.LibraryController"
-      spacing="10"
-      alignment="TOP_CENTER"
-      style="-fx-padding: 20;" />
+<ScrollPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.LibraryController" 
+            fitToWidth="true" fitToHeight="true">
+	<content>
+		<TilePane fx:id="libraryTilePane" hgap="10" vgap="10">
+			<padding>
+				<Insets bottom="10" right="10" top="10" left="10" />
+			</padding>
+		</TilePane>
+    </content>
+</ScrollPane>

@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -17,7 +18,7 @@ public class App extends Application {
         // Load player view from FXML
         MenuBar menuBar = FXMLLoader.load(getClass().getResource("/views/topmenu.fxml"));
         VBox playerView = FXMLLoader.load(getClass().getResource("/views/playerview.fxml"));
-        VBox libraryView = FXMLLoader.load(getClass().getResource("/views/libraryview.fxml"));
+        ScrollPane libraryView = FXMLLoader.load(getClass().getResource("/views/libraryview.fxml"));
 
         root.setTop(menuBar);
         root.setCenter(libraryView);

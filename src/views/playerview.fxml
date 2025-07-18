@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.PlayerController" stylesheets="@playerview.css"> 
+<VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="controllers.PlayerController" stylesheets="@playerview.css"> 
 
     <!-- Row 1: Track Info -->
     <Label fx:id="trackInfoLabel" text="Track Name - Artist" />
@@ -42,7 +43,7 @@
             </padding>
         </Label>
 
-        <Label fx:id="totalTimeLabel" text="00:00">
+        <Label fx:id="totalTimeLabel" text="--/--">
             <padding>
                 <Insets top="5" left="5" right="5" bottom="10" />
             </padding>

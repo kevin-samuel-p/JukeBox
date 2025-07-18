@@ -5,8 +5,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.Track;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -155,7 +155,7 @@ public class PlayerController {
         setPlaybackControlsEnabled(false);
     }
 
-    private void loadAndPlayTrack(File file) {
+    private void loadAndPlayTrack(File file) throws MediaException {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             
@@ -168,6 +168,15 @@ public class PlayerController {
             mediaPlayer.dispose();
         }
 
+        if (!file.exists() || !file.canRead()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Playback Error");
+            alert.setHeaderText("Could not load media file");
+            alert.setContentText(file.getName() + " might be corrupted or unsupported.");
+            alert.showAndWait();
+            return;
+        }
+        
         media = new Media(file.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
