@@ -1,12 +1,15 @@
 package controllers;
 
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.util.Collections;
@@ -44,15 +47,49 @@ public class LibraryController {
 
     private VBox createTrackButton(File track) {
         ImageView imageView = new ImageView(new Image("/assets/disk_icon.png"));
-        imageView.setFitWidth(80);
-        imageView.setFitHeight(80);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
 
-        Label label = new Label(track.getName());
-        label.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
+        String trackName = track.getName();
+        Label label = new Label(trackName.substring(0, trackName.length() - 4));
+        label.setMaxWidth(120);
 
         VBox trackButton = new VBox(imageView, label);
-        trackButton.setAlignment(Pos.CENTER);
-        trackButton.setStyle("-fx-background-color: #2d2d2d; -fx-padding: 10px; -fx-background-radius: 10;");
+        trackButton.getStyleClass().add("tile-button");
+
+        // To clip ImageView inside VBox
+        double arc = 12; 
+        Rectangle clip = new Rectangle(120, 120 + label.getMaxHeight()); 
+        clip.setArcWidth(arc * 2);
+        clip.setArcHeight(arc * 2);
+        trackButton.setClip(clip);
+
+        trackButton.layoutBoundsProperty().addListener((obs, old, bounds) -> {
+            clip.setWidth(bounds.getWidth());
+            clip.setHeight(bounds.getHeight());
+        });
+
+        // Create the transition once
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), trackButton);
+        scaleUp.setToX(1.05);
+        scaleUp.setToY(1.05);
+
+        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(500), trackButton);
+        scaleDown.setToX(1.0);
+        scaleDown.setToY(1.0);
+
+        trackButton.setOnMouseEntered(e -> {
+            scaleDown.stop();
+            scaleUp.playFromStart();
+            trackButton.setClip(null); // remove clip for jagged expansion
+            label.setWrapText(true);
+        });
+        trackButton.setOnMouseExited(e -> {
+            scaleUp.stop();
+            scaleDown.playFromStart();
+            trackButton.setClip(clip); // restore rounded corners
+            label.setWrapText(false);
+        });
 
         return trackButton;
     }

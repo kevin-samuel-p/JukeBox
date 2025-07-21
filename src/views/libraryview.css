@@ -1,7 +1,39 @@
 .scroll-pane {
+    -fx-background-color: #121212;
+}
+
+.scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
 
 .scroll-bar:vertical {
     -fx-background-color: #333;
+}
+
+#libraryTilePane {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+/* Tile button style (VBox in controller) */
+.tile-button {
+    -fx-background-color: #2d2d2d;
+    -fx-background-radius: 12;
+    -fx-alignment: center;
+    -fx-spacing: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0.1, 0, 1);
+}
+
+.tile-button:hover {
+    -fx-background-radius: 0;
+}
+
+/* Optional label tweak for text wrap */
+.tile-button .label {
+    -fx-text-fill: white;
+    -fx-text-align: center;
+    -fx-padding: 8px;
+    -fx-font-size: 13px;
+    -fx-alignment: center;
 }
