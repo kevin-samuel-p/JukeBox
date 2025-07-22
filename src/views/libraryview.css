@@ -10,8 +10,16 @@
     -fx-background-color: #333;
 }
 
-#libraryTilePane {
+.library-tile-pane {
     -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.header-label {
+    -fx-text-fill: white; 
+    -fx-font-size: 36; 
+    -fx-font-weight: bold; 
+    -fx-alignment: center-left; 
     -fx-padding: 10;
 }
 

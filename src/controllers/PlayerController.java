@@ -25,7 +25,6 @@ public class PlayerController {
     @FXML private Slider trackSlider, volumeSlider;
     @FXML private Label currentTimeLabel, totalTimeLabel, volumeIcon;
 
-    private Media media;
     private MediaPlayer mediaPlayer;
 
     private ChangeListener<Number> volumeListener;
@@ -156,6 +155,24 @@ public class PlayerController {
     }
 
     private void loadAndPlayTrack(File file) throws MediaException {
+        if (!file.exists() || !file.canRead()) {
+            if (mediaPlayer != null) {
+                String fileName = TrackService.getInstance().getSelectedTrack().getName();
+                String trackName = fileName.substring(0, fileName.length() - 4);
+                mediaPlayer.pause();
+                playPauseButton.setText("▶");
+                trackInfoLabel.setText("Paused: " + trackName);
+                System.out.println("Paused track: " + trackName);
+            }
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Playback Error");
+            alert.setHeaderText("Could not load media file");
+            alert.setContentText(file.getName() + " might be corrupted, unsupported or missing.");
+            alert.showAndWait();
+            return;
+        }
+
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             
@@ -167,17 +184,8 @@ public class PlayerController {
             
             mediaPlayer.dispose();
         }
-
-        if (!file.exists() || !file.canRead()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Playback Error");
-            alert.setHeaderText("Could not load media file");
-            alert.setContentText(file.getName() + " might be corrupted or unsupported.");
-            alert.showAndWait();
-            return;
-        }
         
-        media = new Media(file.toURI().toString());
+        Media media = new Media(file.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
         String fileName = file.getName();

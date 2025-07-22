@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -26,7 +25,7 @@ public class LibraryController {
     private void initialize() { 
         if (TrackService.getInstance().isMusicFolderEmpty()) {
             Label noTracks = new Label("No tracks found.");
-            noTracks.setStyle("-fx-text-fill: gray;");
+            noTracks.setStyle("-fx-text-fill: gray; -fx-font-size: 16;");
             libraryTilePane.getChildren().add(noTracks);
             return;
         }
@@ -89,7 +88,7 @@ public class LibraryController {
             scaleDown.playFromStart();
             trackButton.setClip(clip); // restore rounded corners
             label.setWrapText(false);
-        });
+        }); // TODO: Fix upper unclipped part peeking out on pop-out
 
         return trackButton;
     }
