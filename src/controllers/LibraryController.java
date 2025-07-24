@@ -5,7 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -19,14 +21,14 @@ import services.TrackService;
 
 public class LibraryController {
     
-    @FXML private TilePane libraryTilePane;
+    @FXML private FlowPane libraryFlowPane;
 
     @FXML
     private void initialize() { 
         if (TrackService.getInstance().isMusicFolderEmpty()) {
             Label noTracks = new Label("No tracks found.");
             noTracks.setStyle("-fx-text-fill: gray; -fx-font-size: 16;");
-            libraryTilePane.getChildren().add(noTracks);
+            libraryFlowPane.getChildren().add(noTracks);
             return;
         }
 
@@ -40,7 +42,7 @@ public class LibraryController {
                 TrackService.getInstance().setCurrentTrackIndex(Integer.parseInt(trackButton.getId()));
                 System.out.println("Selected: " + track.getAbsolutePath()); // TODO: Potentially create a user log
             });
-            libraryTilePane.getChildren().add(trackButton);
+            libraryFlowPane.getChildren().add(trackButton);
         }
     }
 
@@ -53,14 +55,19 @@ public class LibraryController {
         Label label = new Label(trackName.substring(0, trackName.length() - 4));
         label.setMaxWidth(120);
 
-        VBox trackButton = new VBox(imageView, label);
-        trackButton.getStyleClass().add("tile-button");
+        Region spacer = new Region();
+        Region spacer2 = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        VBox.setVgrow(spacer2, Priority.ALWAYS);
 
-        // To clip ImageView inside VBox
-        double arc = 12; 
+        VBox trackButton = new VBox(imageView, spacer, label, spacer2);
+        trackButton.getStyleClass().add("tile-button");
+        // trackButton.setMaxHeight(150);
+
+        // To clip ImageView inside VBox 
         Rectangle clip = new Rectangle(120, 120 + label.getMaxHeight()); 
-        clip.setArcWidth(arc * 2);
-        clip.setArcHeight(arc * 2);
+        clip.setArcWidth(24);
+        clip.setArcHeight(24);
         trackButton.setClip(clip);
 
         trackButton.layoutBoundsProperty().addListener((obs, old, bounds) -> {

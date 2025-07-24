@@ -113,9 +113,11 @@ class DownloadDialog extends Stage {
 
         urlField.textProperty().addListener((obs, oldText, newText) -> {
             feedbackLabel.getStyleClass().removeAll("valid", "invalid");
+            String plainUrl = newText.trim();
 
-            if ((service == ServiceRequest.Song && SONG_PATTERN.matcher(newText.trim()).matches()) ||
-                (service == ServiceRequest.Playlist && PLAYLIST_PATTERN.matcher(newText.trim()).matches())) {
+            if (((service == ServiceRequest.Song && SONG_PATTERN.matcher(plainUrl).matches()) ||
+                 (service == ServiceRequest.Playlist && PLAYLIST_PATTERN.matcher(plainUrl).matches()))
+                    && plainUrl.indexOf(' ') == -1) {
                 feedbackLabel.setText("Valid link format");
                 feedbackLabel.getStyleClass().add("valid");
                 enterButton.setDisable(false);
@@ -143,6 +145,6 @@ class DownloadDialog extends Stage {
 
     private String stripParameters(String url) {
         int ampIndex = url.indexOf('&');
-        return (ampIndex != -1) ? url.substring(0, ampIndex).trim() : url.trim();
+        return (ampIndex != -1) ? url.substring(0, ampIndex) : url;
     }
 }

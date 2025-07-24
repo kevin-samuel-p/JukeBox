@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 
@@ -12,11 +12,11 @@
 	<content>
 		<VBox>
 			<Label text="My Music" styleClass="header-label" />
-			<TilePane fx:id="libraryTilePane" hgap="20" vgap="20" styleClass="library-tile-pane">
+			<FlowPane fx:id="libraryFlowPane" hgap="20" vgap="20" styleClass="library-flow-pane">
 				<padding>
 					<Insets bottom="20" right="20" top="20" left="20" />
 				</padding>
-			</TilePane>
+			</FlowPane>
 		</VBox>
     </content>
 </ScrollPane>

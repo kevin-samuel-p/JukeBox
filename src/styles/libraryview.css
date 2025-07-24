@@ -10,9 +10,10 @@
     -fx-background-color: #333;
 }
 
-.library-tile-pane {
+.library-flow-pane {
     -fx-background-color: transparent;
-    -fx-padding: 10;
+    -fx-padding: 20;
+    -fx-pref-height: 150;
 }
 
 .header-label {
@@ -20,7 +21,7 @@
     -fx-font-size: 36; 
     -fx-font-weight: bold; 
     -fx-alignment: center-left; 
-    -fx-padding: 10;
+    -fx-padding: 20;
 }
 
 /* Tile button style (VBox in controller) */
@@ -28,7 +29,6 @@
     -fx-background-color: #2d2d2d;
     -fx-background-radius: 12;
     -fx-alignment: center;
-    -fx-spacing: 8;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0.1, 0, 1);
 }
