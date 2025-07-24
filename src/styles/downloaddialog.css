@@ -1,0 +1,31 @@
+.url-field {
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+}
+
+.feedback-label {
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-alignment: center-left;
+}
+
+.invalid {
+    -fx-text-fill: red;
+}
+
+.valid {
+    -fx-text-fill: green;
+}
+
+.button {
+    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 80%, #e6e6e6, #cccccc);
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0.1, 0, 1);
+    -fx-cursor: hand;
+}

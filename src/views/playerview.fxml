@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <VBox spacing="5" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="controllers.PlayerController" stylesheets="@playerview.css"> 
+      fx:controller="controllers.PlayerController" stylesheets="@/styles/playerview.css"> 
 
     <!-- Row 1: Track Info -->
     <Label fx:id="trackInfoLabel" text="Track Name - Artist" />

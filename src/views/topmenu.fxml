@@ -9,6 +9,13 @@
                 <MenuItem fx:id="themeMenuItem" text="Theme" onAction="#handleTheme" />
                 <MenuItem fx:id="equalizerMenuItem" text="Equalizer" onAction="#handleEqualizer" />
                 <MenuItem fx:id="loudnessMenuItem" text="Loudness Equalizer" onAction="#handleLoudness" />
+
+                <Menu text="Downloader">
+                    <items>
+                        <MenuItem fx:id="songDownloaderMenuItem" text="Download Song From YouTube" onAction="#downloadSong" />
+                        <MenuItem fx:id="playlistDownloaderMenuItem" text="Download YouTube Playlist" onAction="#downloadPlaylist" />
+                    </items>
+                </Menu>
             </items>
         </Menu>
 

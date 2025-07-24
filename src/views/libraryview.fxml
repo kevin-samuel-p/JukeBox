@@ -8,7 +8,7 @@
 
 <ScrollPane fitToWidth="true" fitToHeight="true"  
 			xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.LibraryController" 
-			stylesheets="@libraryview.css">
+			stylesheets="@/styles/libraryview.css">
 	<content>
 		<VBox>
 			<Label text="My Music" styleClass="header-label" />
