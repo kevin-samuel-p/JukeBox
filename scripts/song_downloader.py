@@ -1,14 +1,17 @@
 import sys
 import argparse
 import subprocess
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mode", required=True, choices=["song"])
 parser.add_argument("--yt-dlp", required=True)
 parser.add_argument("--ffmpeg", required=True)
+parser.add_argument("--output-dir", required=True)
 args = parser.parse_args()
 
 url = sys.stdin.readline().strip()
+output_template = os.path.join(args.output_dir, '%(title)s.%(ext)s')
 
 if not url.startswith("http"):
     print("INVALID_URL")
@@ -19,7 +22,7 @@ command = [
     args.yt_dlp,
     url,
     "--ffmpeg-location", args.ffmpeg,
-    "-o", "%(title)s.%(ext)s",
+    "-o", output_template,
     "-x", "--audio-format", "mp3"
 ]
 

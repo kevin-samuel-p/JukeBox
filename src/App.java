@@ -8,9 +8,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import services.*;
+
+
 public class App extends Application {
+
+    private void initializeServices() {
+        DownloadService.getInstance();
+        TrackService.getInstance();
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Initialize services during startup
+        initializeServices();
+
         // Create root layout
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: black;");

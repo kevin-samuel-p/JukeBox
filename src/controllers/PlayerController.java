@@ -113,7 +113,7 @@ public class PlayerController {
         previousButton.setOnAction(e -> {
             if (mediaPlayer.getCurrentTime().toSeconds() > 1) {
                 mediaPlayer.seek(Duration.ZERO);
-                if (currentLoopMode != LoopMode.ALL 
+                if (currentLoopMode != LoopMode.ALL && currentShuffleMode != ShuffleMode.ON
                         && TrackService.getInstance().getCurrentTrackIndex() == 0) {
                     delayButtonEnable(previousButton);
                 } 
@@ -266,6 +266,8 @@ public class PlayerController {
                 case OFF -> {
                     // Enable it
                     currentShuffleMode = ShuffleMode.ON;
+                    nextButton.setDisable(false);
+                    previousButton.setDisable(false);
                     System.out.println("Shuffle button was supposedly enabled");
                     TrackService.getInstance().enableShuffle();
                     shuffleButton.setStyle("-fx-opacity: 1;");
