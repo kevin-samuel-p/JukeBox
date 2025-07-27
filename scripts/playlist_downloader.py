@@ -46,7 +46,7 @@ def cleanup_lock():
 
 
 # Always run this at exit
-atexit.register(cleanup_lock())
+atexit.register(cleanup_lock)
 
 # Handle signals from OS or Java
 def handle_signal(signum, frame):

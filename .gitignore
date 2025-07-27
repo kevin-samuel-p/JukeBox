@@ -15,3 +15,6 @@ out/
 # Ignore OS files
 .DS_Store
 Thumbs.db
+
+#Ignore personalized data files
+data/download_queue.csv

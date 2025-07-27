@@ -20,6 +20,7 @@ import services.TrackService;
 
 
 public class LibraryController {
+    private static final Image DISK_ICON = new Image("/assets/disk_icon.png");
     
     @FXML private FlowPane libraryFlowPane;
 
@@ -33,7 +34,9 @@ public class LibraryController {
         }
 
         List<File> list = Collections.unmodifiableList(TrackService.getInstance().getTrackList());
-        // for (File track : TrackService.getInstance().getTrackList())
+        // XXX: Find a different, more memory-friendly way to create trackButtons
+        // XXX: Scroll lag
+        // FIXME: Implement lazy loading on scrollpane/tile pane
         for (int i = 0; i < list.size(); i++) {
             File track = list.get(i);
             VBox trackButton = createTrackButton(track);
@@ -47,7 +50,7 @@ public class LibraryController {
     }
 
     private VBox createTrackButton(File track) {
-        ImageView imageView = new ImageView(new Image("/assets/disk_icon.png"));
+        ImageView imageView = new ImageView(DISK_ICON);
         imageView.setFitWidth(120);
         imageView.setFitHeight(120);
 
