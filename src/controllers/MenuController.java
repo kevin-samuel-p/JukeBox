@@ -102,7 +102,6 @@ class DownloadDialog extends Stage {
         enterButton.setOnAction(e -> {
             String url = stripParameters(urlField.getText());
             switch(service) {
-                // TODO: Implement DownloadService functions taking URL as a parameter
                 case Song     -> DownloadService.getInstance().downloadSong(url);
                 case Playlist -> DownloadService.getInstance().downloadPlaylist(url);
             } 

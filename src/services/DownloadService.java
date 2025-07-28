@@ -14,6 +14,14 @@ public class DownloadService {
     private static final DownloadService instance = new DownloadService();
 
     private DownloadService() {
+        if (Files.exists(Paths.get("data", "playlist_downloader.lock")) && !isDownloaderRunning()) {
+            // Lock file was improperly cleaned up from last session
+            try {
+                Files.delete(Paths.get("data", "playlist_downloader.lock"));
+            } catch (IOException e) {
+                System.out.println("[ERROR] Couldn't clean up last session's lock file: " + e.getStackTrace());
+            }
+        }
         launchPlaylistDownloader();
     }
 
@@ -22,7 +30,6 @@ public class DownloadService {
     }
 
     public void downloadSong(String url) {
-        // FIXME: Check whether threading helped
         String userHome = System.getProperty("user.home");
         File musicDir = new File(userHome + File.separator + "Music");
         File downloadsDir = new File(userHome + File.separator + "Downloads");

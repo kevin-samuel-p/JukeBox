@@ -76,7 +76,6 @@
 }
 
 #volumeSlider .fill {
-    -fx-background-color: #bfff00;
     /* Match button color */
     -fx-background-insets: 0;
 }

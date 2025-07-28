@@ -23,6 +23,11 @@ public class App extends Application {
         // Initialize services during startup
         initializeServices();
 
+        // Set up hook to save settings on accidental shutdowns/system crashes
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            SettingsService.getInstance().saveSettings();
+        }));
+
         // Create root layout
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: black;");

@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import services.SettingsService;
 import services.TrackService;
 
 
@@ -32,13 +33,14 @@ public class PlayerController {
 
     private boolean isManuallySeeking = false;
 
-    private enum LoopMode { OFF, ALL, ONE }     // TODO: Impose LoopMode overrides on previous and next buttons
+    private enum LoopMode { OFF, ALL, ONE } 
     private LoopMode currentLoopMode = LoopMode.OFF;
 
-    private enum ShuffleMode { OFF, ON }        // TODO: Customize previous and next controls for Shuffle mode
+    private enum ShuffleMode { OFF, ON } 
     private ShuffleMode currentShuffleMode = ShuffleMode.OFF;
 
-    private double lastVolume = 70; // default volume on start-up
+    // Settings
+    private String themeColor = SettingsService.getInstance().getTheme();
 
     @FXML
     private void initialize() {
@@ -49,6 +51,19 @@ public class PlayerController {
                         .addListener((obs, oldTrack, newTrack) -> {
                 if (newTrack != null) {
                     loadAndPlayTrack(newTrack);
+                }
+            });
+
+            // Listen for theme change
+            SettingsService.getInstance().themeProperty()
+                           .addListener((obs, oldTheme, newTheme) -> {
+                if (newTheme != null) {
+                    themeColor = newTheme;
+                    updateVolumeSliderColor(volumeSlider.getValue());
+                    volumeSlider.lookup(".fill")
+                                .setStyle(String.format(
+                                            "-fx-background-color: %s;", 
+                                            newTheme)); // TODO: Test this
                 }
             });
         });
@@ -65,7 +80,7 @@ public class PlayerController {
         // Get lastVolume value for mute button
         volumeSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
             if (!isChanging && volumeSlider.getValue() != 0) {
-                lastVolume = volumeSlider.getValue();
+                SettingsService.getInstance().setLastVolume(volumeSlider.getValue());;
                 System.out.println("Last volume was " + volumeSlider.getValue());
             }
         });
@@ -73,7 +88,7 @@ public class PlayerController {
         // Mute/unmute using volume icon
         volumeIcon.setOnMouseClicked(e -> {
             if (volumeSlider.getValue() == 0) {
-                volumeSlider.setValue(lastVolume);
+                volumeSlider.setValue(SettingsService.getInstance().getLastVolume());
                 System.out.println("Unumted");
             } else {
                 volumeSlider.setValue(0);
@@ -297,8 +312,8 @@ public class PlayerController {
         Node track = volumeSlider.lookup(".track");
         if (track != null) {
             track.setStyle(String.format(
-                    "-fx-background-color: linear-gradient(to right, #bfff00 %.0f%%, #c0c0c0 %.0f%%);",
-                    percent, percent));
+                    "-fx-background-color: linear-gradient(to right, %s %.0f%%, #c0c0c0 %.0f%%);",
+                    themeColor, percent, percent)); // TODO: Add format parameter for color
         }
     }
 

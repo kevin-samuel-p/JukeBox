@@ -98,7 +98,7 @@ public class LibraryController {
             scaleDown.playFromStart();
             trackButton.setClip(clip); // restore rounded corners
             label.setWrapText(false);
-        }); // TODO: Fix upper unclipped part peeking out on pop-out
+        }); 
 
         return trackButton;
     }
