@@ -17,4 +17,4 @@ out/
 Thumbs.db
 
 #Ignore personalized data files
-data/download_queue.csv
+data/
