@@ -21,8 +21,7 @@ import services.TrackService;
 public class PlayerController {
 
     @FXML private Label trackInfoLabel;
-    @FXML private Button previousButton, playPauseButton, nextButton;
-    @FXML private ToggleButton loopButton, shuffleButton;
+    @FXML private Button previousButton, playPauseButton, nextButton, loopButton, shuffleButton;
     @FXML private Slider trackSlider, volumeSlider;
     @FXML private Label currentTimeLabel, totalTimeLabel, volumeIcon;
 
@@ -39,14 +38,30 @@ public class PlayerController {
     private enum ShuffleMode { OFF, ON } 
     private ShuffleMode currentShuffleMode = ShuffleMode.OFF;
 
-    // Settings
-    private String themeColor = SettingsService.getInstance().getTheme();
+    // FIXME: Settings
+    private String backgroundSetting;
 
     @FXML
     private void initialize() {
 
-        // Listen for track selection
-        Platform.runLater(() -> {
+        Platform.runLater(() -> {    
+            
+            // Initialize volume slider styles
+            volumeSlider.setValue(SettingsService.getInstance().getLastVolume());
+            updateVolumeSliderColor(volumeSlider.getValue());
+
+            // Initialize button colors
+            backgroundSetting = String.format(
+                    "-fx-background-color: %s;", 
+                    SettingsService.getInstance().getTheme());
+
+            playPauseButton.setStyle(backgroundSetting);
+            previousButton.setStyle(backgroundSetting);
+            nextButton.setStyle(backgroundSetting);
+            loopButton.setStyle(backgroundSetting);
+            shuffleButton.setStyle(backgroundSetting);
+
+            // Listen for track selection
             TrackService.getInstance().selectedTrackProperty()
                         .addListener((obs, oldTrack, newTrack) -> {
                 if (newTrack != null) {
@@ -58,12 +73,21 @@ public class PlayerController {
             SettingsService.getInstance().themeProperty()
                            .addListener((obs, oldTheme, newTheme) -> {
                 if (newTheme != null) {
-                    themeColor = newTheme;
+                    SettingsService.getInstance().setTheme(newTheme);
                     updateVolumeSliderColor(volumeSlider.getValue());
                     volumeSlider.lookup(".fill")
                                 .setStyle(String.format(
-                                            "-fx-background-color: %s;", 
-                                            newTheme)); // TODO: Test this
+                                    "-fx-background-color: %s;", 
+                                    newTheme)); // TODO: Test this
+
+                    backgroundSetting = String.format(
+                        "-fx-background-color: %s;", newTheme);
+
+                    playPauseButton.setStyle(backgroundSetting);
+                    previousButton.setStyle(backgroundSetting);
+                    nextButton.setStyle(backgroundSetting);
+                    loopButton.setStyle(backgroundSetting);
+                    shuffleButton.setStyle(backgroundSetting);
                 }
             });
         });
@@ -285,14 +309,18 @@ public class PlayerController {
                     previousButton.setDisable(false);
                     System.out.println("Shuffle button was supposedly enabled");
                     TrackService.getInstance().enableShuffle();
-                    shuffleButton.setStyle("-fx-opacity: 1;");
+                    shuffleButton.setStyle(String.format(
+                                    "-fx-background-color: %s; -fx-opacity: 1;", 
+                                    SettingsService.getInstance().getTheme()));
                 }
                 case ON -> {
                     // Turn it off
                     currentShuffleMode = ShuffleMode.OFF;
                     System.out.println("Shuffle button was supposedly disabled");
                     TrackService.getInstance().disableShuffle();
-                    shuffleButton.setStyle("-fx-opacity: 0.3;");
+                    shuffleButton.setStyle(String.format(
+                                    "-fx-background-color: %s; -fx-opacity: 0.3;", 
+                                    SettingsService.getInstance().getTheme()));
                 }
             }
         });
@@ -313,7 +341,7 @@ public class PlayerController {
         if (track != null) {
             track.setStyle(String.format(
                     "-fx-background-color: linear-gradient(to right, %s %.0f%%, #c0c0c0 %.0f%%);",
-                    themeColor, percent, percent)); // TODO: Add format parameter for color
+                    SettingsService.getInstance().getTheme(), percent, percent)); 
         }
     }
 
@@ -321,12 +349,16 @@ public class PlayerController {
         switch(currentLoopMode) {
             case OFF -> {
                 loopButton.setText("🔁");
-                loopButton.setStyle("-fx-opacity: 0.3;");
+                loopButton.setStyle(String.format(
+                                    "-fx-background-color: %s; -fx-opacity: 0.3;", 
+                                    SettingsService.getInstance().getTheme()));
                 mediaPlayer.setCycleCount(1);
                 mediaPlayer.setOnEndOfMedia(() -> TrackService.getInstance().nextTrack());
             }
             case ALL -> {
-                loopButton.setStyle("-fx-opacity: 1;");
+                loopButton.setStyle(String.format(
+                                    "-fx-background-color: %s; -fx-opacity: 1;", 
+                                    SettingsService.getInstance().getTheme()));
                 nextButton.setDisable(false);
                 mediaPlayer.setOnEndOfMedia(() -> {
                     if (!TrackService.getInstance().nextTrack()) {

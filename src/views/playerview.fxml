@@ -17,7 +17,7 @@
         </padding>
         <Region HBox.hgrow="SOMETIMES" />
         <Label fx:id="volumeIcon" text="🔊" style="-fx-font-size: 24px; -fx-cursor: hand;" />
-        <Slider fx:id="volumeSlider" minWidth="130" value="70" prefHeight="20" style="-fx-translate-y: 20;" />
+        <Slider fx:id="volumeSlider" minWidth="130" prefHeight="20" style="-fx-translate-y: 20;" />
     </HBox>
 
     <!-- Row 3: Centered Controls -->
@@ -25,11 +25,11 @@
         <padding>
             <Insets top="10" right="10" bottom="5" left="10" />
         </padding>
-        <ToggleButton fx:id="loopButton" text="🔁" />
+        <Button fx:id="loopButton" text="🔁" />
         <Button fx:id="previousButton" text="⏮" />
         <Button fx:id="playPauseButton" text="▶" style="-fx-font-size: 24px; -fx-pref-width: 50px; -fx-pref-height: 50px;" />
         <Button fx:id="nextButton" text="⏭" />
-        <ToggleButton fx:id="shuffleButton" text="🔀" />
+        <Button fx:id="shuffleButton" text="🔀" />
     </HBox>
 
     <!-- Track Slider Centered -->
