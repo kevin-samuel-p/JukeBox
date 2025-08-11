@@ -6,9 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -25,10 +25,13 @@ public class LibraryController {
     private static final Image DISK_ICON = new Image("/assets/disk_icon.png");
     
     @FXML private ScrollPane libraryScrollPane;
-    @FXML private FlowPane libraryFlowPane;
+    @FXML private TilePane libraryTilePane;
 
     @FXML
     private void initialize() {
+
+        // Configure scroll bar
+        libraryScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
         // Set theme and listener for theme change
         Platform.runLater(() -> {
@@ -40,7 +43,7 @@ public class LibraryController {
         if (TrackService.getInstance().isMusicFolderEmpty()) {
             Label noTracks = new Label("No tracks found.");
             noTracks.setStyle("-fx-text-fill: gray; -fx-font-size: 16;");
-            libraryFlowPane.getChildren().add(noTracks);
+            libraryTilePane.getChildren().add(noTracks);
             return;
         }
 
@@ -56,7 +59,7 @@ public class LibraryController {
                 TrackService.getInstance().setCurrentTrackIndex(Integer.parseInt(trackButton.getId()));
                 System.out.println("Selected: " + track.getAbsolutePath()); // TODO: Potentially create a user log
             });
-            libraryFlowPane.getChildren().add(trackButton);
+            libraryTilePane.getChildren().add(trackButton);
         }
     }
 
