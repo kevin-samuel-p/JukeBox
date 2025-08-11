@@ -48,18 +48,7 @@ public class PlayerController {
             
             // Initialize volume slider styles
             volumeSlider.setValue(SettingsService.getInstance().getLastVolume());
-            updateVolumeSliderColor(volumeSlider.getValue());
-
-            // Initialize button colors
-            backgroundSetting = String.format(
-                    "-fx-background-color: %s;", 
-                    SettingsService.getInstance().getTheme());
-
-            playPauseButton.setStyle(backgroundSetting);
-            previousButton.setStyle(backgroundSetting);
-            nextButton.setStyle(backgroundSetting);
-            loopButton.setStyle(backgroundSetting);
-            shuffleButton.setStyle(backgroundSetting);
+            setTheme();
 
             // Listen for track selection
             TrackService.getInstance().selectedTrackProperty()
@@ -74,20 +63,7 @@ public class PlayerController {
                            .addListener((obs, oldTheme, newTheme) -> {
                 if (newTheme != null) {
                     SettingsService.getInstance().setTheme(newTheme);
-                    updateVolumeSliderColor(volumeSlider.getValue());
-                    volumeSlider.lookup(".fill")
-                                .setStyle(String.format(
-                                    "-fx-background-color: %s;", 
-                                    newTheme)); // TODO: Test this
-
-                    backgroundSetting = String.format(
-                        "-fx-background-color: %s;", newTheme);
-
-                    playPauseButton.setStyle(backgroundSetting);
-                    previousButton.setStyle(backgroundSetting);
-                    nextButton.setStyle(backgroundSetting);
-                    loopButton.setStyle(backgroundSetting);
-                    shuffleButton.setStyle(backgroundSetting);
+                    setTheme();
                 }
             });
         });
@@ -343,6 +319,21 @@ public class PlayerController {
                     "-fx-background-color: linear-gradient(to right, %s %.0f%%, #c0c0c0 %.0f%%);",
                     SettingsService.getInstance().getTheme(), percent, percent)); 
         }
+    }
+
+    private void setTheme() {
+        updateVolumeSliderColor(volumeSlider.getValue());
+        
+        // Set button colors
+        backgroundSetting = String.format(
+            "-fx-background-color: %s;", 
+            SettingsService.getInstance().getTheme());
+
+        playPauseButton.setStyle(backgroundSetting);
+        previousButton.setStyle(backgroundSetting);
+        nextButton.setStyle(backgroundSetting);
+        loopButton.setStyle(backgroundSetting);
+        shuffleButton.setStyle(backgroundSetting);
     }
 
     private void updateLoopButton() {

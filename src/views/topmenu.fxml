@@ -2,11 +2,20 @@
 
 <?import javafx.scene.control.*?>
 
-<MenuBar xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MenuController">
+<MenuBar xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MenuController" stylesheets="@/styles/topmenu.css">
     <menus>
         <Menu text="Settings">
             <items>
-                <MenuItem fx:id="themeMenuItem" text="Theme" onAction="#handleTheme" />
+                <Menu fx:id="themeMenu" text="Theme">
+                    <items>
+                        <MenuItem fx:id="bff000Theme" styleClass="bff000" />
+                        <MenuItem fx:id="00ffffTheme" styleClass="o0ffff" />
+                        <MenuItem fx:id="cbc1aeTheme" styleClass="cbc1ae" />
+                        <MenuItem fx:id="fdb0c0Theme" styleClass="fdb0c0" />
+                        <MenuItem fx:id="ff7f7fTheme" styleClass="ff7f7f" />
+                        <MenuItem fx:id="fcb001Theme" styleClass="fcb001" />
+                    </items>
+                </Menu>
                 <MenuItem fx:id="equalizerMenuItem" text="Equalizer" onAction="#handleEqualizer" />
                 <MenuItem fx:id="loudnessMenuItem" text="Loudness Equalizer" onAction="#handleLoudness" />
 

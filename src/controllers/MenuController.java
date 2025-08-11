@@ -28,10 +28,10 @@ import controllers.DownloadDialog.ServiceRequest;
  */
 public class MenuController {
     
-    @FXML
-    private void handleTheme(ActionEvent event) {
-        showInfo("Theme", "Theme picker will be added here.");
-    }
+    // @FXML
+    // private void handleTheme(ActionEvent event) {
+    //     showInfo("Theme", "Theme picker will be added here.");
+    // }
 
     @FXML
     private void handleEqualizer(ActionEvent event) {
@@ -139,7 +139,6 @@ class DownloadDialog extends Stage {
         scene.getStylesheets().add(getClass().getResource("/styles/downloaddialog.css").toExternalForm());
         setScene(scene);
         Platform.runLater(() -> getScene().getRoot().requestFocus());
-
     }
 
     private String stripParameters(String url) {
