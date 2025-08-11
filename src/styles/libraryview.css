@@ -2,13 +2,6 @@
     -fx-background-color: #121212;
 }
 
-.scroll-pane > .viewport {
-    -fx-background-color: 
-        linear-gradient(to bottom, #bff00020 0%, transparent 100%),
-        radial-gradient(focus-angle 0deg, focus-distance 0%, center 50% 50%, radius 80%, 
-                        #14141480 30%, #14141480 30%, #00000080 60%);
-}
-
 .scroll-bar:vertical {
     -fx-background-color: #333;
 }

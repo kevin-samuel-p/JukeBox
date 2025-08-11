@@ -9,7 +9,7 @@
                 <Menu fx:id="themeMenu" text="Theme">
                     <items>
                         <MenuItem fx:id="bff000Theme" styleClass="bff000" />
-                        <MenuItem fx:id="00ffffTheme" styleClass="o0ffff" />
+                        <MenuItem fx:id="o0ffffTheme" styleClass="o0ffff" />
                         <MenuItem fx:id="cbc1aeTheme" styleClass="cbc1ae" />
                         <MenuItem fx:id="fdb0c0Theme" styleClass="fdb0c0" />
                         <MenuItem fx:id="ff7f7fTheme" styleClass="ff7f7f" />

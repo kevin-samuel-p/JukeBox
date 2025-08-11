@@ -1,6 +1,7 @@
 package controllers;
 
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,16 +17,26 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import services.SettingsService;
 import services.TrackService;
 
 
 public class LibraryController {
     private static final Image DISK_ICON = new Image("/assets/disk_icon.png");
     
+    @FXML private ScrollPane libraryScrollPane;
     @FXML private FlowPane libraryFlowPane;
 
     @FXML
-    private void initialize() { 
+    private void initialize() {
+
+        // Set theme and listener for theme change
+        Platform.runLater(() -> {
+            updateBackgroundColor();
+            SettingsService.getInstance().themeProperty()
+                           .addListener((obs, oldTheme, newTheme) -> updateBackgroundColor());
+        });
+
         if (TrackService.getInstance().isMusicFolderEmpty()) {
             Label noTracks = new Label("No tracks found.");
             noTracks.setStyle("-fx-text-fill: gray; -fx-font-size: 16;");
@@ -101,5 +112,17 @@ public class LibraryController {
         }); 
 
         return trackButton;
+    }
+
+    private void updateBackgroundColor() {
+        StringBuilder scrollPaneStyle = new StringBuilder();
+        libraryScrollPane.lookup(".viewport").setStyle(
+               scrollPaneStyle.append("-fx-background-color: ")
+                              .append("linear-gradient(to bottom, ")
+                              .append(SettingsService.getInstance().getTheme())
+                              .append(" 0%, transparent 100%), ")
+                              .append("radial-gradient(focus-angle 0deg, focus-distance 0%, center 50% 50%, radius 80%, ")
+                              .append("#14141480 30%, #14141480 30%, #00000080 60%);")
+                            .toString());
     }
 }

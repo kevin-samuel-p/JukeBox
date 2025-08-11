@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import services.DownloadService;
+import services.SettingsService;
 import controllers.DownloadDialog.ServiceRequest;
 
 
@@ -28,10 +30,22 @@ import controllers.DownloadDialog.ServiceRequest;
  */
 public class MenuController {
     
-    // @FXML
-    // private void handleTheme(ActionEvent event) {
-    //     showInfo("Theme", "Theme picker will be added here.");
-    // }
+    @FXML private MenuItem bff000Theme;
+    @FXML private MenuItem o0ffffTheme;
+    @FXML private MenuItem cbc1aeTheme;
+    @FXML private MenuItem fdb0c0Theme;
+    @FXML private MenuItem ff7f7fTheme;
+    @FXML private MenuItem fcb001Theme;
+
+    @FXML
+    private void initialize() {
+        bff000Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#bff000"));
+        o0ffffTheme.setOnAction(e -> SettingsService.getInstance().setTheme("#00ffff"));
+        cbc1aeTheme.setOnAction(e -> SettingsService.getInstance().setTheme("#cbc1ae"));
+        fdb0c0Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#fdb0c0"));
+        ff7f7fTheme.setOnAction(e -> SettingsService.getInstance().setTheme("#ff7f7f"));
+        fcb001Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#fcb001"));
+    }
 
     @FXML
     private void handleEqualizer(ActionEvent event) {
