@@ -179,16 +179,16 @@ class EqualizerDialog extends Stage {
     private static final double MIN_GAIN = -12.0;
     private static final double MAX_GAIN = 12.0;
     private static final String[][] BANDS = {
-        {   "Sub-bass"     ,   "32Hz"  },
-        {   "Bass"         ,   "62Hz"  },
-        {   "Low Mids"     ,   "125Hz" },
-        {   "Mid-lows"     ,   "250Hz" },
-        {   "Mids"         ,   "500Hz" },
-        {   "Mid-highs"    ,   "1kHz"  },
-        {   "Upper Mids"   ,   "2kHz"  },
-        {   "Presence"     ,   "4kHz"  },
-        {   "Brilliance"   ,   "8kHz"  },
-        {   "Air"          ,   "16kHz" }
+        {"Sub-bass"   ,  "32Hz"},
+        {"Bass"       ,  "64Hz"},
+        {"Low Mids"   , "125Hz"},
+        {"Mid-lows"   , "250Hz"},
+        {"Mids"       , "500Hz"},
+        {"Mid-highs"  ,  "1kHz"},
+        {"Upper Mids" ,  "2kHz"},
+        {"Presence"   ,  "4kHz"},
+        {"Brilliance" ,  "8kHz"},
+        {"Air"        , "16kHz"}
     };
 
     private final Slider[] sliders = new Slider[NUM_BANDS];
@@ -200,16 +200,16 @@ class EqualizerDialog extends Stage {
         initModality(Modality.APPLICATION_MODAL);
 
         // Create presets
-        presets.put("Flat", new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-        presets.put("Treble Boost", new double[]{0, 0, 0, -1, -1, 0, 2, 4, 5, 6});
-        presets.put("Bass Boost", new double[]{6, 5, 4, 2, 1, 0, 0, -1, -2, -3});
-        presets.put("Headphones", new double[]{3, 2, 2, 1, 0, 0, 2, 3, 4, 5});
-        presets.put("Laptop", new double[]{-2, -3, -3, -2, 0, 0, 2, 3, 4, 5});
-        presets.put("Portable Speakers", new double[]{3, 2, 1, 1, 0, 0, 1, 2, 3, 4});
-        presets.put("Home Stereo", new double[]{2, 2, 2, 1, 0, 0, 1, 2, 3, 4});
-        presets.put("TV", new double[]{-4, -4, -3, -2, 0, 0, 3, 4, 5, 6});
-        presets.put("Car", new double[]{4, 4, 3, 2, 1, 0, 1, 2, 3, 4});
-        presets.put("Custom", null);
+        presets.put("Flat"              , new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        presets.put("Treble Boost"      , new double[]{0, 0, 0, -1, -1, 0, 2, 4, 5, 6});
+        presets.put("Bass Boost"        , new double[]{6, 5, 4, 2, 1, 0, 0, -1, -2, -3});
+        presets.put("Headphones"        , new double[]{3, 2, 2, 1, 0, 0, 2, 3, 4, 5});
+        presets.put("Laptop"            , new double[]{-2, -3, -3, -2, 0, 0, 2, 3, 4, 5});
+        presets.put("Portable Speakers" , new double[]{3, 2, 1, 1, 0, 0, 1, 2, 3, 4});
+        presets.put("Home Stereo"       , new double[]{2, 2, 2, 1, 0, 0, 1, 2, 3, 4});
+        presets.put("TV"                , new double[]{-4, -4, -3, -2, 0, 0, 3, 4, 5, 6});
+        presets.put("Car"               , new double[]{4, 4, 3, 2, 1, 0, 1, 2, 3, 4});
+        presets.put("Custom"            , null);
 
         // Sliders layout
         HBox sliderBox = new HBox(10);
@@ -221,20 +221,18 @@ class EqualizerDialog extends Stage {
         for (int i = 0; i < NUM_BANDS; i++) {
             VBox bandBox = new VBox(5);
             bandBox.setAlignment(Pos.CENTER);
-            // bandBox.setPrefWidth(250);
 
             Label bandName = new Label(BANDS[i][0]);
             Label band = new Label(BANDS[i][1]);
-            // bandName.setFont(new Font("Arial", 16));
-            // bandName.setPrefWidth(250);
-            // band.setFont(new Font("Arial", 16));
-            // band.setPrefWidth(250);
 
             Slider slider = new Slider(MIN_GAIN, MAX_GAIN, SettingsService.getInstance().getGainValue(i));
             slider.setOrientation(Orientation.VERTICAL);
             slider.setPrefHeight(150);
             slider.setMajorTickUnit(1);
             slider.setSnapToTicks(true);
+            slider.setStyle(String.format(
+                    "-thumb-color: %s;", 
+                    SettingsService.getInstance().getTheme()));
 
             Label gain = new Label(String.format("%.0f", slider.getValue()));
             slider.valueProperty().addListener((obs, oldVal, newVal) -> {

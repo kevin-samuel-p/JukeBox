@@ -8,12 +8,16 @@
     -fx-text-alignment: center;
 }
 
+.slider {
+    -thumb-color: #bff000;
+}
+
 .slider .track {
     -fx-background-color: #555;
 }
 
 .slider .thumb {
-    -fx-background-color: #00bfff;
+    -fx-background-color: -thumb-color;
 }
 
 .combo-box {
