@@ -16,6 +16,7 @@ public class App extends Application {
     private void initializeServices() {
         DownloadService.getInstance();
         TrackService.getInstance();
+        SettingsService.getInstance();
     }
 
     @Override

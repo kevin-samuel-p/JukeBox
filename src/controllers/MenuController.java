@@ -1,18 +1,23 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -49,7 +54,7 @@ public class MenuController {
 
     @FXML
     private void handleEqualizer(ActionEvent event) {
-        showInfo("Equalizer", "Equalizer settings will appear here.");
+        new EqualizerDialog().showAndWait();
     }
 
     @FXML
@@ -98,7 +103,7 @@ class DownloadDialog extends Stage {
     private final Button enterButton = new Button("Enter");
     private final Button cancelButton = new Button("Cancel");
 
-    public DownloadDialog(ServiceRequest service) {
+    DownloadDialog(ServiceRequest service) {
         setTitle("Download YouTube " + service.toString());
         initModality(Modality.APPLICATION_MODAL);
         setResizable(false);
@@ -158,5 +163,92 @@ class DownloadDialog extends Stage {
     private String stripParameters(String url) {
         int ampIndex = url.indexOf('&');
         return (ampIndex != -1) ? url.substring(0, ampIndex) : url;
+    }
+}
+
+
+/*
+ *  ----- EQUALIZER DIALOG BOX -----
+ */
+class EqualizerDialog extends Stage {
+    
+    private static final int NUM_BANDS = 10;
+    private static final double MIN_GAIN = -12.0;
+    private static final double MAX_GAIN = 12.0;
+
+    private final Slider[] sliders = new Slider[NUM_BANDS];
+    private final ComboBox<String> presetBox = new ComboBox<>();
+    private final Map<String, double[]> presets = new HashMap<>();
+
+    EqualizerDialog() {
+        setTitle("Equalizer Settings");
+        initModality(Modality.APPLICATION_MODAL);
+
+        // Create presets
+        presets.put("Flat", new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        presets.put("Treble Boost", new double[]{0, 0, 0, -1, -1, 0, 2, 4, 5, 6});
+        presets.put("Bass Boost", new double[]{6, 5, 4, 2, 1, 0, 0, -1, -2, -3});
+        presets.put("Headphones", new double[]{3, 2, 2, 1, 0, 0, 2, 3, 4, 5});
+        presets.put("Laptop", new double[]{-2, -3, -3, -2, 0, 0, 2, 3, 4, 5});
+        presets.put("Portable Speakers", new double[]{3, 2, 1, 1, 0, 0, 1, 2, 3, 4});
+        presets.put("Home Stereo", new double[]{2, 2, 2, 1, 0, 0, 1, 2, 3, 4});
+        presets.put("TV", new double[]{-4, -4, -3, -2, 0, 0, 3, 4, 5, 6});
+        presets.put("Car", new double[]{4, 4, 3, 2, 1, 0, 1, 2, 3, 4});
+        presets.put("Custom", null);
+
+        // Sliders layout
+        HBox sliderBox = new HBox(10);
+        sliderBox.setPadding(new Insets(10));
+        sliderBox.setStyle("-fx-background-color: #1e1e1e;");
+
+        for (int i = 0; i < NUM_BANDS; i++) {
+            VBox bandBox = new VBox(5);
+            bandBox.setPrefWidth(50);
+
+            Label label = new Label((i+1) + "");
+            label.setStyle("-fx-text-fill: white;");
+
+            Slider slider = new Slider(MIN_GAIN, MAX_GAIN, SettingsService.getInstance().getGainValue(i));
+            slider.setOrientation(Orientation.VERTICAL);
+            slider.setShowTickLabels(true);
+            slider.setShowTickMarks(true);
+            slider.setMajorTickUnit(6);
+            slider.setBlockIncrement(1);
+
+            final int bandIndex = i;
+            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                SettingsService.getInstance().setGainValue(bandIndex, newVal.doubleValue());
+                if (!"Custom".equals(presetBox.getValue())) {
+                    presetBox.setValue("Custom");
+                }
+            });
+
+            sliders[i] = slider;
+            bandBox.getChildren().addAll(label, slider);
+            sliderBox.getChildren().add(bandBox);
+        }
+
+        // Presets dropdown
+        presetBox.getItems().addAll(presets.keySet());
+        presetBox.setValue(SettingsService.getInstance().getPreset());
+        presetBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && presets.containsKey(newVal) && !"Custom".equals(newVal)) {
+                for (int i = 0; i < NUM_BANDS; i++) {
+                    sliders[i].setValue(presets.get(newVal)[i]);
+                }
+            }
+        });
+
+        HBox presetRow = new HBox(10, new Label("Preset:"), presetBox);
+        presetRow.setPadding(new Insets(10));
+
+        // Buttons
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> close());
+
+        VBox root = new VBox(10, sliderBox, presetRow, closeButton);
+        Scene scene = new Scene(root, 600, 400);
+        scene.getStylesheets().add(getClass().getResource("/styles/equalizerdialog.css").toExternalForm()); // FIXME XXX
+        setScene(scene);
     }
 }

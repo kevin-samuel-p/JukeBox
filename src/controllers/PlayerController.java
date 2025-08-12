@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.media.AudioEqualizer;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
@@ -89,7 +90,7 @@ public class PlayerController {
         volumeIcon.setOnMouseClicked(e -> {
             if (volumeSlider.getValue() == 0) {
                 volumeSlider.setValue(SettingsService.getInstance().getLastVolume());
-                System.out.println("Unumted");
+                System.out.println("Unmuted");
             } else {
                 volumeSlider.setValue(0);
                 System.out.println("Muted");
@@ -203,6 +204,18 @@ public class PlayerController {
         Media media = new Media(file.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
+        Equalizer equalizer = new Equalizer(mediaPlayer);
+        for (int i = 0; i < 10; i++) {
+            final int bandIndex = i;
+            equalizer.setBandGain(bandIndex, SettingsService.getInstance().getGainValue(bandIndex));
+            SettingsService.getInstance().gainProperty(bandIndex)
+                           .addListener((obs, oldVal, newVal) -> {
+                if (newVal != null && newVal.doubleValue() != oldVal.doubleValue()) {
+                    equalizer.setBandGain(bandIndex, newVal.doubleValue());
+                }
+            });
+        }
+
         String fileName = file.getName();
         String trackName = fileName.substring(0, fileName.length() - 4);
         trackInfoLabel.setText("Playing: " + trackName);
@@ -215,6 +228,15 @@ public class PlayerController {
             Duration total = media.getDuration();
             trackSlider.setMax(total.toSeconds());
             totalTimeLabel.setText(formatTime(total));
+
+            System.out.println("Equalizer bands info");
+            mediaPlayer.getAudioEqualizer().getBands().forEach(band -> {
+                System.out.printf(
+                            "Center: %.1f Hz, Bandwidth: %.1f Hz, Gain: %.1f dB%n",
+                            band.getCenterFrequency(),
+                            band.getBandwidth(),
+                            band.getGain());
+            });
 
             switch(currentLoopMode) {
                 case ALL -> {
@@ -401,5 +423,19 @@ public class PlayerController {
         loopButton.setDisable(!enabled);
         shuffleButton.setDisable(!enabled);
         trackSlider.setDisable(!enabled);
+    }
+
+    // ----- EQUALIZER -----
+    public class Equalizer {
+        private final AudioEqualizer equalizer;
+
+        public Equalizer(MediaPlayer player) {
+            this.equalizer = player.getAudioEqualizer();
+            this.equalizer.setEnabled(true);
+        }
+
+        public void setBandGain(int bandIndex, double gain) {
+            equalizer.getBands().get(bandIndex).setGain(gain);
+        }
     }
 }
