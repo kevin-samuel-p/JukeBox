@@ -20,7 +20,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -175,6 +178,18 @@ class EqualizerDialog extends Stage {
     private static final int NUM_BANDS = 10;
     private static final double MIN_GAIN = -12.0;
     private static final double MAX_GAIN = 12.0;
+    private static final String[][] BANDS = {
+        {   "Sub-bass"     ,   "32Hz"  },
+        {   "Bass"         ,   "62Hz"  },
+        {   "Low Mids"     ,   "125Hz" },
+        {   "Mid-lows"     ,   "250Hz" },
+        {   "Mids"         ,   "500Hz" },
+        {   "Mid-highs"    ,   "1kHz"  },
+        {   "Upper Mids"   ,   "2kHz"  },
+        {   "Presence"     ,   "4kHz"  },
+        {   "Brilliance"   ,   "8kHz"  },
+        {   "Air"          ,   "16kHz" }
+    };
 
     private final Slider[] sliders = new Slider[NUM_BANDS];
     private final ComboBox<String> presetBox = new ComboBox<>();
@@ -198,33 +213,48 @@ class EqualizerDialog extends Stage {
 
         // Sliders layout
         HBox sliderBox = new HBox(10);
-        sliderBox.setPadding(new Insets(10));
+        sliderBox.setSpacing(30);
+        sliderBox.setPadding(new Insets(20));
+        sliderBox.setAlignment(Pos.CENTER);
         sliderBox.setStyle("-fx-background-color: #1e1e1e;");
 
         for (int i = 0; i < NUM_BANDS; i++) {
             VBox bandBox = new VBox(5);
-            bandBox.setPrefWidth(50);
+            bandBox.setAlignment(Pos.CENTER);
+            // bandBox.setPrefWidth(250);
 
-            Label label = new Label((i+1) + "");
-            label.setStyle("-fx-text-fill: white;");
+            Label bandName = new Label(BANDS[i][0]);
+            Label band = new Label(BANDS[i][1]);
+            // bandName.setFont(new Font("Arial", 16));
+            // bandName.setPrefWidth(250);
+            // band.setFont(new Font("Arial", 16));
+            // band.setPrefWidth(250);
 
             Slider slider = new Slider(MIN_GAIN, MAX_GAIN, SettingsService.getInstance().getGainValue(i));
             slider.setOrientation(Orientation.VERTICAL);
-            slider.setShowTickLabels(true);
-            slider.setShowTickMarks(true);
-            slider.setMajorTickUnit(6);
-            slider.setBlockIncrement(1);
+            slider.setPrefHeight(150);
+            slider.setMajorTickUnit(1);
+            slider.setSnapToTicks(true);
+
+            Label gain = new Label(String.format("%.0f", slider.getValue()));
+            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    gain.setText(String.format("%.0f", slider.getValue()));
+                }
+            });
 
             final int bandIndex = i;
-            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
-                SettingsService.getInstance().setGainValue(bandIndex, newVal.doubleValue());
-                if (!"Custom".equals(presetBox.getValue())) {
-                    presetBox.setValue("Custom");
+            slider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+                if (!isChanging) {
+                    SettingsService.getInstance().setGainValue(bandIndex, slider.getValue());
+                    if (!presetBox.getValue().equals("Custom")) {
+                        presetBox.setValue("Custom");
+                    }
                 }
             });
 
             sliders[i] = slider;
-            bandBox.getChildren().addAll(label, slider);
+            bandBox.getChildren().addAll(bandName, band, slider, gain);
             sliderBox.getChildren().add(bandBox);
         }
 
@@ -232,22 +262,36 @@ class EqualizerDialog extends Stage {
         presetBox.getItems().addAll(presets.keySet());
         presetBox.setValue(SettingsService.getInstance().getPreset());
         presetBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            presetBox.setValue(newVal);
+            SettingsService.getInstance().setPreset(newVal);
             if (newVal != null && presets.containsKey(newVal) && !"Custom".equals(newVal)) {
                 for (int i = 0; i < NUM_BANDS; i++) {
                     sliders[i].setValue(presets.get(newVal)[i]);
+                    SettingsService.getInstance().setGainValue(i, presets.get(newVal)[i]);
                 }
             }
         });
+        presetBox.setPrefSize(130, 50);
 
         HBox presetRow = new HBox(10, new Label("Preset:"), presetBox);
-        presetRow.setPadding(new Insets(10));
+        presetRow.setAlignment(Pos.CENTER);
+        presetRow.setPadding(new Insets(30));
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Buttons
         Button closeButton = new Button("Close");
+        closeButton.setPrefSize(75, 50);
         closeButton.setOnAction(e -> close());
 
-        VBox root = new VBox(10, sliderBox, presetRow, closeButton);
-        Scene scene = new Scene(root, 600, 400);
+        HBox lastRow = new HBox(spacer, closeButton);
+        lastRow.setPadding(new Insets(20));
+
+        VBox root = new VBox(sliderBox, presetRow, lastRow);
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 900, 500);
         scene.getStylesheets().add(getClass().getResource("/styles/equalizerdialog.css").toExternalForm()); // FIXME XXX
         setScene(scene);
     }
