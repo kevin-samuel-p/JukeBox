@@ -2,6 +2,7 @@ package services;
 
 import javafx.scene.media.MediaPlayer;
 
+// TODO: Implement LoudnessNormalizer that normalizes to user setting rather than max volume
 public class LoudnessNormalizer {
     
     private final MediaPlayer mediaPlayer;

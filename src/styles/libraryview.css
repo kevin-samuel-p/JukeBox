@@ -32,12 +32,3 @@
 .tile-button:hover {
     -fx-background-radius: 0;
 }
-
-/* Optional label tweak for text wrap */
-.tile-button .label {
-    -fx-text-fill: white;
-    -fx-text-align: center;
-    -fx-padding: 8px;
-    -fx-font-size: 13px;
-    -fx-alignment: center;
-}

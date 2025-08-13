@@ -200,6 +200,10 @@ class EqualizerDialog extends Stage {
         {"Brilliance" ,  "8kHz"},
         {"Air"        , "16kHz"}
     };
+    private static final String[] EQUALIZER_PRESETS = {
+        "Flat", "Treble Boost", "Bass Boost", "Headphones", "Laptop", 
+        "Portable Speakers", "Home Stereo", "TV", "Car", "Custom"
+    };
 
     private final Slider[] sliders = new Slider[NUM_BANDS];
     private final ComboBox<String> presetBox = new ComboBox<>();
@@ -267,7 +271,7 @@ class EqualizerDialog extends Stage {
         }
 
         // Presets dropdown
-        presetBox.getItems().addAll(presets.keySet());
+        presetBox.getItems().addAll(EQUALIZER_PRESETS);
         presetBox.setValue(SettingsService.getInstance().getPreset());
         presetBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             presetBox.setValue(newVal);
@@ -279,7 +283,7 @@ class EqualizerDialog extends Stage {
                 }
             }
         });
-        presetBox.setPrefSize(130, 50);
+        presetBox.setPrefSize(220, 50);
 
         HBox presetRow = new HBox(10, new Label("Preset:"), presetBox);
         presetRow.setAlignment(Pos.CENTER);

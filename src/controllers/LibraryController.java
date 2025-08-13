@@ -1,16 +1,23 @@
 package controllers;
 
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -70,20 +77,27 @@ public class LibraryController {
         imageView.setFitHeight(120);
 
         String trackName = track.getName();
-        Label label = new Label(trackName.substring(0, trackName.length() - 4));
-        label.setMaxWidth(120);
+        Text text = new Text(trackName.substring(0, trackName.length() - 4));
+        text.setFill(Color.WHITE);
+        text.setFont(Font.font(12));
 
-        Region spacer = new Region();
-        Region spacer2 = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-        VBox.setVgrow(spacer2, Priority.ALWAYS);
+        StackPane labelPane = new StackPane(text);
+        labelPane.setMinWidth(120);
+        labelPane.setMaxWidth(120);
+        labelPane.setPrefWidth(120);
+        labelPane.setPrefHeight(40);
+        labelPane.setPadding(new Insets(4, 8, 4, 8));
+        labelPane.setAlignment(Pos.CENTER_LEFT);
 
-        VBox trackButton = new VBox(imageView, spacer, label, spacer2);
+        Rectangle miniClip = new Rectangle(120, 40);
+        labelPane.setClip(miniClip);
+
+        VBox trackButton = new VBox(imageView, labelPane);
         trackButton.getStyleClass().add("tile-button");
-        // trackButton.setMaxHeight(150);
+        trackButton.setMaxHeight(170);
 
         // To clip ImageView inside VBox 
-        Rectangle clip = new Rectangle(120, 120 + label.getMaxHeight()); 
+        Rectangle clip = new Rectangle(120, 120 + labelPane.getMaxHeight()); 
         clip.setArcWidth(24);
         clip.setArcHeight(24);
         trackButton.setClip(clip);
@@ -102,17 +116,31 @@ public class LibraryController {
         scaleDown.setToX(1.0);
         scaleDown.setToY(1.0);
 
+        // Create scroll animation
+        TranslateTransition scroll = new TranslateTransition(Duration.seconds(2.5), text);
+        double textWidth = text.getLayoutBounds().getWidth();
+        scroll.setInterpolator(Interpolator.LINEAR);
+        scroll.setCycleCount(Animation.INDEFINITE);
+        scroll.setAutoReverse(true);
+
         trackButton.setOnMouseEntered(e -> {
             scaleDown.stop();
             scaleUp.playFromStart();
             trackButton.setClip(null); // remove clip for jagged expansion
-            label.setWrapText(true);
+            
+            if (textWidth > 120) {
+                scroll.setFromX(0);
+                scroll.setToX(-(textWidth - 100));
+                scroll.playFromStart();
+            }
         });
         trackButton.setOnMouseExited(e -> {
             scaleUp.stop();
             scaleDown.playFromStart();
             trackButton.setClip(clip); // restore rounded corners
-            label.setWrapText(false);
+            
+            scroll.stop();
+            text.setTranslateX(0);
         }); 
 
         return trackButton;

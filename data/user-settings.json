@@ -1,19 +1,19 @@
 {
-    "volume": 58.461538461538474,
+    "volume": 70,
     "normalizer_enabled": false,
     "equalizer": {
-        "preset": "Portable Speakers",
+        "preset": "Flat",
         "bands": [
-            3,
-            2,
-            1,
-            1,
             0,
             0,
-            1,
-            2,
-            3,
-            4
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
         ]
     },
     "theme": "#bff000"

@@ -30,7 +30,6 @@
     -fx-shape: "M0,50 A50,50 0 1,0 100,50 A50,50 0 1,0 0,50 Z";
     -fx-pref-width: 40px;
     -fx-pref-height: 40px;
-    /* -fx-background-color: #bfff00; */
     -fx-text-fill: black;
     -fx-font-family: "Arial Black";
     -fx-font-weight: bold;
