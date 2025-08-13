@@ -23,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -45,7 +44,7 @@ public class MenuController {
     @FXML private MenuItem ff7f7fTheme;
     @FXML private MenuItem fcb001Theme;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     private void initialize() {
         bff000Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#bff000"));
         o0ffffTheme.setOnAction(e -> SettingsService.getInstance().setTheme("#00ffff"));
@@ -106,6 +105,7 @@ class DownloadDialog extends Stage {
     private final Button enterButton = new Button("Enter");
     private final Button cancelButton = new Button("Cancel");
 
+    @SuppressWarnings("unused")
     DownloadDialog(ServiceRequest service) {
         setTitle("Download YouTube " + service.toString());
         initModality(Modality.APPLICATION_MODAL);
@@ -195,6 +195,7 @@ class EqualizerDialog extends Stage {
     private final ComboBox<String> presetBox = new ComboBox<>();
     private final Map<String, double[]> presets = new HashMap<>();
 
+    @SuppressWarnings("unused")
     EqualizerDialog() {
         setTitle("Equalizer Settings");
         initModality(Modality.APPLICATION_MODAL);
@@ -290,7 +291,7 @@ class EqualizerDialog extends Stage {
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 900, 500);
-        scene.getStylesheets().add(getClass().getResource("/styles/equalizerdialog.css").toExternalForm()); // FIXME XXX
+        scene.getStylesheets().add(getClass().getResource("/styles/equalizerdialog.css").toExternalForm());
         setScene(scene);
     }
 }

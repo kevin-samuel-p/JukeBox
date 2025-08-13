@@ -27,7 +27,7 @@ public class LibraryController {
     @FXML private ScrollPane libraryScrollPane;
     @FXML private TilePane libraryTilePane;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     private void initialize() {
 
         // Configure scroll bar
@@ -63,6 +63,7 @@ public class LibraryController {
         }
     }
 
+    @SuppressWarnings("unused")
     private VBox createTrackButton(File track) {
         ImageView imageView = new ImageView(DISK_ICON);
         imageView.setFitWidth(120);

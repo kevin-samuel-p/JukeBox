@@ -42,7 +42,7 @@ public class PlayerController {
     // FIXME: Settings
     private String backgroundSetting;
 
-    @FXML
+    @FXML @SuppressWarnings({ "unused", "incomplete-switch" })
     private void initialize() {
 
         Platform.runLater(() -> {    
@@ -170,6 +170,7 @@ public class PlayerController {
         setPlaybackControlsEnabled(false);
     }
 
+    @SuppressWarnings("unused")
     private void loadAndPlayTrack(File file) throws MediaException {
         if (!file.exists() || !file.canRead()) {
             if (mediaPlayer != null) {

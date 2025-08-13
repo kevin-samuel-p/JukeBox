@@ -21,6 +21,8 @@ public class SettingsService {
 
     private final ObjectProperty<String> theme = new SimpleObjectProperty<>(null);
     private final ObjectProperty<Double> volume = new SimpleObjectProperty<>(null);
+    
+    @SuppressWarnings("unchecked")
     private final ObjectProperty<Double>[] equalizerGainValues = (ObjectProperty<Double>[]) new SimpleObjectProperty[10];
     private String equalizerPreset = null;
 

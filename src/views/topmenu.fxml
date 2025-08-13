@@ -17,7 +17,7 @@
                     </items>
                 </Menu>
                 <MenuItem fx:id="equalizerMenuItem" text="Equalizer" onAction="#handleEqualizer" />
-                <MenuItem fx:id="loudnessMenuItem" text="Loudness Equalizer" onAction="#handleLoudness" />
+                <MenuItem fx:id="loudnessMenuItem" text="Loudness Normalizer" onAction="#handleLoudness" />
 
                 <Menu text="Downloader">
                     <items>
