@@ -21,13 +21,14 @@ import services.SettingsService;
 import services.TrackService;
 
 
+@SuppressWarnings("unused")
 public class LibraryController {
     private static final Image DISK_ICON = new Image("/assets/disk_icon.png");
     
     @FXML private ScrollPane libraryScrollPane;
     @FXML private TilePane libraryTilePane;
 
-    @FXML @SuppressWarnings("unused")
+    @FXML
     private void initialize() {
 
         // Configure scroll bar
@@ -63,7 +64,6 @@ public class LibraryController {
         }
     }
 
-    @SuppressWarnings("unused")
     private VBox createTrackButton(File track) {
         ImageView imageView = new ImageView(DISK_ICON);
         imageView.setFitWidth(120);

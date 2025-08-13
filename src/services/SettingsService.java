@@ -25,6 +25,7 @@ public class SettingsService {
     @SuppressWarnings("unchecked")
     private final ObjectProperty<Double>[] equalizerGainValues = (ObjectProperty<Double>[]) new SimpleObjectProperty[10];
     private String equalizerPreset = null;
+    private final ObjectProperty<Boolean> normalizerEnabled = new SimpleObjectProperty<>(null);
 
     private SettingsService() {
         loadSettings();
@@ -49,6 +50,8 @@ public class SettingsService {
                 equalizerGainValues[i] = new SimpleObjectProperty<>();
                 equalizerGainValues[i].set(gainValues.getDouble(i));
             }
+
+            normalizerEnabled.set(settings.getBoolean("normalizer_enabled"));
         } catch (IOException e) {
             System.err.println("Failed to load settings: " + e.getMessage());
             settings = new JSONObject();
@@ -56,6 +59,11 @@ public class SettingsService {
             // Default settings
             theme.set("#bff000");
             volume.set(70.000);
+            for (int i = 0; i < 10; i++) {
+                equalizerGainValues[i] = new SimpleObjectProperty<>();
+                equalizerGainValues[i].set(0d);
+            }
+            normalizerEnabled.set(false);
         }
     }
 
@@ -66,6 +74,7 @@ public class SettingsService {
         equalizerSettings.put("preset", getPreset());
         equalizerSettings.put("bands", gainValues);
         settings.put("equalizer", equalizerSettings);
+        settings.put("normalizer_enabled", isNormalizerEnabled());
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(SETTINGS_PATH))) {
             writer.write(settings.toString(4)); // indentation amount
@@ -90,6 +99,10 @@ public class SettingsService {
         return equalizerGainValues[band];
     }
 
+    public ObjectProperty<Boolean> normalizerStatusProperty() {
+        return normalizerEnabled;
+    }
+
     // ----- GETTERS -----
 
     public String getTheme() {
@@ -108,6 +121,12 @@ public class SettingsService {
         return equalizerPreset;
     }
 
+    public boolean isNormalizerEnabled() {
+        return normalizerEnabled.get();
+    }
+
+
+
     // ----- SETTERS -----
 
     public void setTheme(String newTheme) {
@@ -125,5 +144,9 @@ public class SettingsService {
 
     public void setPreset(String newPreset) {
         equalizerPreset = newPreset;
+    }
+
+    public void enableNormalizer(boolean status) {
+        normalizerEnabled.set(status);
     }
 }

@@ -1,13 +1,14 @@
 {
     "volume": 58.461538461538474,
+    "normalizer_enabled": false,
     "equalizer": {
-        "preset": "Car",
+        "preset": "Portable Speakers",
         "bands": [
-            4,
-            4,
             3,
             2,
             1,
+            1,
+            0,
             0,
             1,
             2,

@@ -44,6 +44,8 @@ public class MenuController {
     @FXML private MenuItem ff7f7fTheme;
     @FXML private MenuItem fcb001Theme;
 
+    @FXML private MenuItem loudnessMenuItem;
+
     @FXML @SuppressWarnings("unused")
     private void initialize() {
         bff000Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#bff000"));
@@ -52,16 +54,22 @@ public class MenuController {
         fdb0c0Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#fdb0c0"));
         ff7f7fTheme.setOnAction(e -> SettingsService.getInstance().setTheme("#ff7f7f"));
         fcb001Theme.setOnAction(e -> SettingsService.getInstance().setTheme("#fcb001"));
+
+        loudnessMenuItem.setText((
+            (SettingsService.getInstance().isNormalizerEnabled()) ? 
+                            "Disable " : "Enable ") + "Loudness Normalizer");
+        loudnessMenuItem.setOnAction(e -> {
+            SettingsService.getInstance().enableNormalizer(!
+                SettingsService.getInstance().isNormalizerEnabled());
+            loudnessMenuItem.setText((
+                (SettingsService.getInstance().isNormalizerEnabled()) ? 
+                                "Disable " : "Enable ") + "Loudness Normalizer");
+        });
     }
 
     @FXML
     private void handleEqualizer(ActionEvent event) {
         new EqualizerDialog().showAndWait();
-    }
-
-    @FXML
-    private void handleLoudness(ActionEvent event) {
-        showInfo("Loudness Equalizer", "Loudness normalization setup goes here.");
     }
 
     @FXML
@@ -79,6 +87,7 @@ public class MenuController {
         new DownloadDialog(ServiceRequest.Playlist).showAndWait();
     }
 
+    @Deprecated
     private void showInfo(String title, String content) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
@@ -173,6 +182,7 @@ class DownloadDialog extends Stage {
 /*
  *  ----- EQUALIZER DIALOG BOX -----
  */
+@SuppressWarnings("unused")
 class EqualizerDialog extends Stage {
     
     private static final int NUM_BANDS = 10;
@@ -195,7 +205,6 @@ class EqualizerDialog extends Stage {
     private final ComboBox<String> presetBox = new ComboBox<>();
     private final Map<String, double[]> presets = new HashMap<>();
 
-    @SuppressWarnings("unused")
     EqualizerDialog() {
         setTitle("Equalizer Settings");
         initModality(Modality.APPLICATION_MODAL);

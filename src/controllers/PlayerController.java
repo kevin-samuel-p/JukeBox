@@ -15,10 +15,13 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import services.Equalizer;
+import services.LoudnessNormalizer;
 import services.SettingsService;
 import services.TrackService;
 
 
+@SuppressWarnings({ "unused", "incomplete-switch" })
 public class PlayerController {
 
     @FXML private Label trackInfoLabel;
@@ -42,7 +45,7 @@ public class PlayerController {
     // FIXME: Settings
     private String backgroundSetting;
 
-    @FXML @SuppressWarnings({ "unused", "incomplete-switch" })
+    @FXML
     private void initialize() {
 
         Platform.runLater(() -> {    
@@ -170,7 +173,6 @@ public class PlayerController {
         setPlaybackControlsEnabled(false);
     }
 
-    @SuppressWarnings("unused")
     private void loadAndPlayTrack(File file) throws MediaException {
         if (!file.exists() || !file.canRead()) {
             if (mediaPlayer != null) {
@@ -216,6 +218,10 @@ public class PlayerController {
                 }
             });
         }
+
+        LoudnessNormalizer normalizer = new LoudnessNormalizer(mediaPlayer);
+        volumeSlider.valueProperty().addListener(
+            (obs, oldVal, newVal) -> normalizer.setBaseVolume(newVal.doubleValue()));
 
         String fileName = file.getName();
         String trackName = fileName.substring(0, fileName.length() - 4);
@@ -424,19 +430,5 @@ public class PlayerController {
         loopButton.setDisable(!enabled);
         shuffleButton.setDisable(!enabled);
         trackSlider.setDisable(!enabled);
-    }
-
-    // ----- EQUALIZER -----
-    public class Equalizer {
-        private final AudioEqualizer equalizer;
-
-        public Equalizer(MediaPlayer player) {
-            this.equalizer = player.getAudioEqualizer();
-            this.equalizer.setEnabled(true);
-        }
-
-        public void setBandGain(int bandIndex, double gain) {
-            equalizer.getBands().get(bandIndex).setGain(gain);
-        }
     }
 }

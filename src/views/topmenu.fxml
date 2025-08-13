@@ -16,8 +16,9 @@
                         <MenuItem fx:id="fcb001Theme" styleClass="fcb001" />
                     </items>
                 </Menu>
+                
                 <MenuItem fx:id="equalizerMenuItem" text="Equalizer" onAction="#handleEqualizer" />
-                <MenuItem fx:id="loudnessMenuItem" text="Loudness Normalizer" onAction="#handleLoudness" />
+                <MenuItem fx:id="loudnessMenuItem" />
 
                 <Menu text="Downloader">
                     <items>

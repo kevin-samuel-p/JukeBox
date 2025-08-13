@@ -46,6 +46,7 @@ public class TrackService {
     public void loadTracksFromFolder(Path folderPath) {
         File folder = folderPath.toFile();
         if (folder.exists() && folder.isDirectory()) {
+            
             @SuppressWarnings("unused") 
             File[] mp3Files = folder.listFiles(
                                 (dir, name) -> name.toLowerCase()
